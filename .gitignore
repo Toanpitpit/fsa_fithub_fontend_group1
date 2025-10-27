@@ -1,27 +1,24 @@
-# ==== Common ====
-.idea/
-.vscode/
-*.iml
-*.ipr
-*.iws
-.DS_Store
-.env
-.env.*
-
-# ==== Spring Boot (Backend) ====
-target/
-.mvn/
-mvnw*
-logs/
-HELP.md
-build/
-.settings/
-.project/ 
-.classpath/
-
-# ==== React (Frontend) ====
-node_modules/
-build/
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.env
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
