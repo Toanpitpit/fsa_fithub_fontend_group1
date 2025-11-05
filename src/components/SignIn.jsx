@@ -150,17 +150,6 @@ export default function SignIn({ onSwitchToSignUp }) {
                   <span>Continue with Google</span>
                 </button>
 
-                <div className="text-center mt-3">
-                  <span className="switch-text">Don't have an account? </span>
-                  <button
-                    type="button"
-                    onClick={onSwitchToSignUp}
-                    className="switch-link"
-                  >
-                    Create Account
-                  </button>
-                </div>
-
                 <div className="text-center mt-4">
                   <p className="terms-text">
                     By continuing, you agree to our{" "}
