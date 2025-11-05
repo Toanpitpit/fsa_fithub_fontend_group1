@@ -14,8 +14,8 @@ import "../style/SignUp.css";
 
 export default function SignUp({ onSwitchToSignIn }) {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
+    fullname: "",
     email: "",
     dateOfBirth: "",
     gender: "",
@@ -37,8 +37,8 @@ export default function SignUp({ onSwitchToSignIn }) {
     e.preventDefault();
 
     const {
-      firstName,
-      lastName,
+      username,
+      fullname,
       email,
       dateOfBirth,
       gender,
@@ -95,9 +95,9 @@ export default function SignUp({ onSwitchToSignIn }) {
                     <Form.Group className="mb-3 position-relative">
                       <Form.Control
                         type="text"
-                        name="firstName"
-                        placeholder="First Name"
-                        value={formData.firstName}
+                        name="username"
+                        placeholder="Username"
+                        value={formData.username}
                         onChange={handleChange}
                         className="auth-input"
                       />
@@ -108,9 +108,9 @@ export default function SignUp({ onSwitchToSignIn }) {
                     <Form.Group className="mb-3 position-relative">
                       <Form.Control
                         type="text"
-                        name="lastName"
-                        placeholder="Last Name"
-                        value={formData.lastName}
+                        name="fullname"
+                        placeholder="Full name"
+                        value={formData.fullname}
                         onChange={handleChange}
                         className="auth-input"
                       />
@@ -229,17 +229,7 @@ export default function SignUp({ onSwitchToSignIn }) {
                   <FcGoogle className="google-icon" />
                   <span>Sign up with Google</span>
                 </button>
-
-                <div className="text-center mt-4">
-                  <span className="switch-text">Already have an account? </span>
-                  <button
-                    type="button"
-                    onClick={onSwitchToSignIn}
-                    className="switch-link"
-                  >
-                    Sign In
-                  </button>
-                </div>
+                
               </Form>
             </div>
           </div>
