@@ -10,7 +10,6 @@ import {
 } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import "../style/SignIn.css";
-import { useNavigate } from "react-router-dom";
 
 export default function SignIn({ onSwitchToSignUp }) {
   const [email, setEmail] = useState("");
@@ -18,13 +17,12 @@ export default function SignIn({ onSwitchToSignUp }) {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
-      setError("Username , Password not be empty!");
+      setError("Email và mật khẩu không được để trống");
       return;
     } else {
       setError("");
@@ -34,13 +32,13 @@ export default function SignIn({ onSwitchToSignUp }) {
 
   async function login(email, password) {
     try {
-      const response = await fetch(API_BASE_URL + "/auth/login", {
+      const response = await fetch(API_BASE_URL + "auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: email,
+          email: email,
           password: password,
         }),
       });
@@ -55,20 +53,14 @@ export default function SignIn({ onSwitchToSignUp }) {
         localStorage.setItem("access_token", data.data.tokens.access_token);
         localStorage.setItem("refresh_token", data.data.tokens.refresh_token);
         localStorage.setItem("user", JSON.stringify(data.data.user));
-         setSuccessMessage("Login Successfuly , Welcome");
-        setTimeout(() => {
-           navigate("/profile");
-        }, 1000);
-       
+        console.log("Login successful:", data.message);
         return data;
       } else {
         throw new Error(data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError(
-        "Login fail , Please try again! (Check your username or password)"
-      );
+      setError("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
       throw error;
     }
   }
@@ -96,17 +88,11 @@ export default function SignIn({ onSwitchToSignUp }) {
                 </div>
               )}
 
-              {successMessage && (
-                <div className="alert alert-success" role="alert">
-                  {successMessage}
-                </div>
-              )}
-
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3 position-relative">
                   <Form.Control
-                    type="text"
-                    placeholder="Username or Email Address"
+                    type="email"
+                    placeholder="Email Address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="auth-input"
@@ -163,6 +149,17 @@ export default function SignIn({ onSwitchToSignUp }) {
                   <FcGoogle className="google-icon" />
                   <span>Continue with Google</span>
                 </button>
+
+                <div className="text-center mt-3">
+                  <span className="switch-text">Don't have an account? </span>
+                  <button
+                    type="button"
+                    onClick={onSwitchToSignUp}
+                    className="switch-link"
+                  >
+                    Create Account
+                  </button>
+                </div>
 
                 <div className="text-center mt-4">
                   <p className="terms-text">
