@@ -1,6 +1,5 @@
 /* Admin Sidebar Styles */
 .admin-sidebar {
-  margin:  20px;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
@@ -18,12 +17,68 @@
   width: 260px;
 }
 
+
+
+.admin-logo-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.logo-fit-text {
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease infinite;
+  position: relative;
+  display: inline-block;
+}
+
+.logo-fit-text::after {
+  content: 'Fit';
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: blur(8px);
+  opacity: 0.7;
+  z-index: -1;
+  animation: gradientShift 3s ease infinite;
+}
+
+.logo-hub-text {
+  color: #ffffff;
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* Subtle line between Fit and Hub */
+.logo-hub-text::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  width: 2px;
+  height: 60%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-50%);
+}
 /* Header */
 .sidebar-header {
   padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: bisque;
 }
 
 .brand {
@@ -75,6 +130,7 @@
 .search-container {
   padding: 0 1rem;
   margin-bottom: 1rem;
+  background-color: #f0e9e9;
 }
 
 .search-wrapper {
@@ -114,6 +170,7 @@
   flex: 1;
   padding: 0 0.5rem;
   overflow-y: auto;
+  background-color: #d1d5db;
 }
 
 .nav-items {
