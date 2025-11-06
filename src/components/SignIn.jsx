@@ -32,17 +32,17 @@ export default function SignIn({ onSwitchToSignUp }) {
 
   async function login(email, password) {
     try {
-      const response = await fetch(API_BASE_URL + "auth/login", {
+      const response = await fetch(API_BASE_URL + "/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email,
+          username: email,
           password: password,
         }),
       });
-
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
