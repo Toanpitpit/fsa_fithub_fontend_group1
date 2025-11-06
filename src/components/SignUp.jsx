@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Spinner } from "react-bootstrap";
 import {
   FaUser,
   FaEnvelope,
@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import "../style/SignUp.css";
+import { useSignUp } from "../hooks/useSignUp";
 
 export default function SignUp({ onSwitchToSignIn }) {
   const [formData, setFormData] = useState({
@@ -22,8 +23,10 @@ export default function SignUp({ onSwitchToSignIn }) {
     password: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState("");
   const [isAgree, setIsAgree] = useState(false);
+
+  // Sử dụng custom hook
+  const { signUp, isLoading, error, successMessage, clearMessages } = useSignUp();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,26 +34,33 @@ export default function SignUp({ onSwitchToSignIn }) {
       ...prev,
       [name]: value,
     }));
+    // Clear error khi user bắt đầu nhập
+    clearMessages();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const {
-      username,
-      fullname,
-      email,
-      dateOfBirth,
-      gender,
-      password,
-      confirmPassword,
-    } = formData;
-    if (Object.values(formData).some((v) => !v.trim()))
-      return setError("Vui lòng điền đầy đủ thông tin.");
-    if (password !== confirmPassword)
-      return setError("Mật khẩu xác nhận không khớp.");
-    if (isAgree == false)
-      return setError("Bạn cần chấp nhận điều khoản để tiếp tục.");
+    // Gọi function từ custom hook
+    const result = await signUp(formData, isAgree);
+
+    if (result.success) {
+      setFormData({
+        username: "",
+        fullname: "",
+        email: "",
+        dateOfBirth: "",
+        gender: "",
+        password: "",
+        confirmPassword: "",
+      });
+      setIsAgree(false);
+
+      // Chuyển sang trang đăng nhập sau 3 giây
+      setTimeout(() => {
+        onSwitchToSignIn();
+      }, 3000);
+    }
   };
 
   const handleGoogleSignUp = () => {
@@ -84,11 +94,20 @@ export default function SignUp({ onSwitchToSignIn }) {
                 Create your account to get started
               </p>
 
+              {/* Success Message */}
+              {successMessage && (
+                <div className="alert alert-success" role="alert">
+                  {successMessage}
+                </div>
+              )}
+
+              {/* Error Message */}
               {error && (
                 <div className="alert alert-danger" role="alert">
                   {error}
                 </div>
               )}
+
               <Form onSubmit={handleSubmit}>
                 <Row>
                   <Col md={6}>
@@ -100,6 +119,7 @@ export default function SignUp({ onSwitchToSignIn }) {
                         value={formData.username}
                         onChange={handleChange}
                         className="auth-input"
+                        disabled={isLoading}
                       />
                       <FaUser className="input-icon" />
                     </Form.Group>
@@ -113,6 +133,7 @@ export default function SignUp({ onSwitchToSignIn }) {
                         value={formData.fullname}
                         onChange={handleChange}
                         className="auth-input"
+                        disabled={isLoading}
                       />
                       <FaUser className="input-icon" />
                     </Form.Group>
@@ -127,6 +148,7 @@ export default function SignUp({ onSwitchToSignIn }) {
                     value={formData.email}
                     onChange={handleChange}
                     className="auth-input"
+                    disabled={isLoading}
                   />
                   <FaEnvelope className="input-icon" />
                 </Form.Group>
@@ -140,6 +162,7 @@ export default function SignUp({ onSwitchToSignIn }) {
                         value={formData.dateOfBirth}
                         onChange={handleChange}
                         className="auth-input"
+                        disabled={isLoading}
                       />
                       <FaCalendarAlt className="input-icon" />
                     </Form.Group>
@@ -151,11 +174,12 @@ export default function SignUp({ onSwitchToSignIn }) {
                         value={formData.gender}
                         onChange={handleChange}
                         className="auth-input gender-select"
+                        disabled={isLoading}
                       >
                         <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
                       </select>
                       <FaVenusMars className="input-icon" />
                     </Form.Group>
@@ -172,6 +196,7 @@ export default function SignUp({ onSwitchToSignIn }) {
                         value={formData.password}
                         onChange={handleChange}
                         className="auth-input"
+                        disabled={isLoading}
                       />
                       <FaLock className="input-icon" />
                     </Form.Group>
@@ -185,6 +210,7 @@ export default function SignUp({ onSwitchToSignIn }) {
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         className="auth-input"
+                        disabled={isLoading}
                       />
                       <FaLock className="input-icon" />
                     </Form.Group>
@@ -195,7 +221,9 @@ export default function SignUp({ onSwitchToSignIn }) {
                   <Form.Check
                     type="checkbox"
                     id="terms-agreement"
-                    onClick={() => setIsAgree(!isAgree)}
+                    checked={isAgree}
+                    onChange={(e) => setIsAgree(e.target.checked)}
+                    disabled={isLoading}
                     label={
                       <span className="terms-check-label">
                         I agree to the{" "}
@@ -212,9 +240,29 @@ export default function SignUp({ onSwitchToSignIn }) {
                   />
                 </Form.Group>
 
-                <Button type="submit" className="auth-submit-btn">
-                  Create Account
-                  <FaArrowRight className="btn-icon" />
+                <Button 
+                  type="submit" 
+                  className="auth-submit-btn"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                        className="me-2"
+                      />
+                      Đang xử lý...
+                    </>
+                  ) : (
+                    <>
+                      Create Account
+                      <FaArrowRight className="btn-icon" />
+                    </>
+                  )}
                 </Button>
 
                 <div className="auth-divider">

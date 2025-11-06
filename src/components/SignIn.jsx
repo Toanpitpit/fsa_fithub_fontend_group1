@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import "../style/SignIn.css";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn({ onSwitchToSignUp }) {
   const [email, setEmail] = useState("");
@@ -17,12 +18,13 @@ export default function SignIn({ onSwitchToSignUp }) {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
-      setError("Email và mật khẩu không được để trống");
+      setError("Username , Password not be empty!");
       return;
     } else {
       setError("");
@@ -32,13 +34,13 @@ export default function SignIn({ onSwitchToSignUp }) {
 
   async function login(email, password) {
     try {
-      const response = await fetch(API_BASE_URL + "auth/login", {
+      const response = await fetch(API_BASE_URL + "/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email,
+          username: email,
           password: password,
         }),
       });
@@ -53,14 +55,20 @@ export default function SignIn({ onSwitchToSignUp }) {
         localStorage.setItem("access_token", data.data.tokens.access_token);
         localStorage.setItem("refresh_token", data.data.tokens.refresh_token);
         localStorage.setItem("user", JSON.stringify(data.data.user));
-        console.log("Login successful:", data.message);
+         setSuccessMessage("Login Successfuly , Welcome");
+        setTimeout(() => {
+           navigate("/profile");
+        }, 1000);
+       
         return data;
       } else {
         throw new Error(data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+      setError(
+        "Login fail , Please try again! (Check your username or password)"
+      );
       throw error;
     }
   }
@@ -88,11 +96,17 @@ export default function SignIn({ onSwitchToSignUp }) {
                 </div>
               )}
 
+              {successMessage && (
+                <div className="alert alert-success" role="alert">
+                  {successMessage}
+                </div>
+              )}
+
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3 position-relative">
                   <Form.Control
-                    type="email"
-                    placeholder="Email Address"
+                    type="text"
+                    placeholder="Username or Email Address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="auth-input"
