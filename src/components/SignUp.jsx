@@ -177,9 +177,9 @@ export default function SignUp({ onSwitchToSignIn }) {
                         disabled={isLoading}
                       >
                         <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
                       </select>
                       <FaVenusMars className="input-icon" />
                     </Form.Group>
