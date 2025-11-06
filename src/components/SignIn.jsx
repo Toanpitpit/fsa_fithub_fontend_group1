@@ -1,72 +1,68 @@
+import axios from "axios";
 import { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import {
+  FaArrowRight,
   FaEnvelope,
-  FaLock,
   FaEye,
   FaEyeSlash,
-  FaArrowRight,
-  FaCheck,
+  FaLock,
 } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import "../style/SignIn.css";
 
 export default function SignIn({ onSwitchToSignUp }) {
-  const [email, setEmail] = useState("");
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!email.trim() || !password.trim()) {
-      setError("Email và mật khẩu không được để trống");
-      return;
-    } else {
-      setError("");
-      login(email, password);
-    }
-  };
+  const [errorLogin, setErrorLogin] = useState("");
+  const [shake, setShake] = useState(false);
 
-  async function login(email, password) {
+  const navigate = useNavigate();
+
+  const clickSignIn = async () => {
+
     try {
-      const response = await fetch(API_BASE_URL + "auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
+      const loginRequest = {
+        emailOrUsername: emailOrUsername,
+        password: password,
+        rememberMe: rememberMe,
+      };
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      const loginResponse = await axios.post(
+        `${API_BASE_URL}/auth/login`,
+        loginRequest
+      );
 
-      const data = await response.json();
+      const tokens = loginResponse.data?.data?.tokens;
 
-      if (data.success) {
-        localStorage.setItem("access_token", data.data.tokens.access_token);
-        localStorage.setItem("refresh_token", data.data.tokens.refresh_token);
-        localStorage.setItem("user", JSON.stringify(data.data.user));
-        console.log("Login successful:", data.message);
-        return data;
+      console.log(rememberMe);
+      if (rememberMe) {
+        // Lưu lâu dài (xóa browser không mất token)
+        localStorage.setItem("access_token", tokens.access_token); // default 1h
+        localStorage.setItem("refresh_token", tokens.refresh_token); // default 30 ngày
       } else {
-        throw new Error(data.message || "Login failed");
+        // Lưu tạm trong session (xóa browser mất token)
+        sessionStorage.setItem("access_token", tokens.access_token); //  default 1h
+        sessionStorage.setItem("refresh_token", tokens.refresh_token); // default 1 ngày
       }
-    } catch (error) {
-      console.error("Login error:", error);
-      setError("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
-      throw error;
-    }
-  }
 
-  const handleGoogleSignIn = () => {
-    console.log("Sign in with Google");
+
+      navigate("/home", { state: { successMessage: loginResponse.data?.message + " 🎉" } });
+    } catch (error) {
+      const errMsg = error.response?.data?.message || error.message;
+
+      setErrorLogin(errMsg);
+      setShake(true);
+      setTimeout(() => {
+        setErrorLogin("");
+        setShake(false);
+      }, 5000);
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -82,19 +78,22 @@ export default function SignIn({ onSwitchToSignUp }) {
               <h2 className="auth-title">Welcome To FitHub</h2>
               <p className="auth-subtitle">Sign in to continue your journey</p>
 
-              {error && (
-                <div className="alert alert-danger" role="alert">
-                  {error}
+              {errorLogin && (
+                <div
+                  className={`alert alert-danger ${shake ? "shake" : ""}`}
+                  role="alert"
+                >
+                  {errorLogin}
                 </div>
               )}
 
-              <Form onSubmit={handleSubmit}>
+              <Form>
                 <Form.Group className="mb-3 position-relative">
                   <Form.Control
-                    type="email"
-                    placeholder="Email Address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="text"
+                    placeholder="Username or Email Address"
+                    value={emailOrUsername}
+                    onChange={(e) => setEmailOrUsername(e.target.value)}
                     className="auth-input"
                   />
                   <FaEnvelope className="input-icon" />
@@ -124,7 +123,7 @@ export default function SignIn({ onSwitchToSignUp }) {
                     id="remember"
                     label="Remember me"
                     checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
+                    onChange={() => setRememberMe(!rememberMe)}
                     className="remember-check"
                   />
                   <a href="#" className="forgot-link">
@@ -132,7 +131,10 @@ export default function SignIn({ onSwitchToSignUp }) {
                   </a>
                 </div>
 
-                <Button type="submit" className="auth-submit-btn">
+                <Button
+                  onClick={() => clickSignIn()}
+                  className="auth-submit-btn"
+                >
                   Sign In
                   <FaArrowRight className="btn-icon" />
                 </Button>
@@ -141,11 +143,7 @@ export default function SignIn({ onSwitchToSignUp }) {
                   <span>OR</span>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleGoogleSignIn}
-                  className="google-btn"
-                >
+                <button type="button" className="google-btn">
                   <FcGoogle className="google-icon" />
                   <span>Continue with Google</span>
                 </button>
