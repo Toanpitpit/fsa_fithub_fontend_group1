@@ -1,45 +1,35 @@
-import { useState } from 'react';
-import {
-  Home,
-  Search,
-  FileText,
-  BarChart3,
-  MousePointerClick,
-  FlaskConical,
-  Square,
-  Triangle,
-  Menu,
-  LogOut,
-} from 'lucide-react';
-import '../style/Sidebar.css';
+import { useState } from "react";
+import { Menu, Search, Square, Triangle, LogOut } from "lucide-react";
+import { NAV_ITEMS_BY_ROLE } from "./navConfig";
+import "../style/Sidebar.css";
 
-export  default function Sidebar() {
+export default function Sidebar({ role = "pt" }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const navItems = [
-    { icon: Home, label: 'Dashboard', active: false },
-    { icon: FileText, label: 'CMS', active: false },
-    { icon: BarChart3, label: 'Forms', active: false },
-    { icon: MousePointerClick, label: 'Clicks', active: false },
-    { icon: FlaskConical, label: 'Split Testing', active: false },
-  ];
+  const navItems = NAV_ITEMS_BY_ROLE[role] || [];
 
   const integrations = [
-    { icon: Square, label: 'Vvix Studio', bgColor: 'bg-white', borderColor: 'border' },
-    { icon: Triangle, label: 'Vercel', bgColor: 'bg-dark' },
-    { icon: Square, label: 'Framer', bgColor: 'bg-info' },
+    {
+      icon: Square,
+      label: "Vvix Studio",
+      bgColor: "bg-white",
+      borderColor: "border",
+    },
+    { icon: Triangle, label: "Vercel", bgColor: "bg-dark" },
+    { icon: Square, label: "Framer", bgColor: "bg-info" },
   ];
 
   return (
-    <div className={`admin-sidebar ${isCollapsed ? 'collapsed' : 'expanded'}`}>
-     
+    <div className={`admin-sidebar ${isCollapsed ? "collapsed" : "expanded"}`}>
       <div className="sidebar-header">
         {!isCollapsed && (
           <div className="brand">
-            <div className="brand-icon">
-              <span>V</span>
+            <div className="text-center mb-8">
+              <h1 className="admin-logo-title">
+                <span className="logo-fit-text">Fit</span>
+                <span className="logo-hub-text">Hub</span>
+              </h1>
             </div>
-            <span className="brand-name">Veloce</span>
           </div>
         )}
         <button
@@ -50,7 +40,6 @@ export  default function Sidebar() {
         </button>
       </div>
 
-      
       {!isCollapsed && (
         <div className="search-container">
           <div className="search-wrapper">
@@ -64,7 +53,6 @@ export  default function Sidebar() {
         </div>
       )}
 
-      
       <nav className="sidebar-nav">
         <div className="nav-items">
           {navItems.map((item, index) => (
@@ -73,31 +61,18 @@ export  default function Sidebar() {
               icon={item.icon}
               label={item.label}
               active={item.active}
-              onClick={() => {
-                if (isCollapsed) {
-                  setIsCollapsed(false);
-                }
-              }}
               collapsed={isCollapsed}
             />
           ))}
         </div>
 
-        {/* Integrations Section */}
-        <div className="integrations-section">
-          {!isCollapsed && (
-            <p className="section-title">Integrations</p>
-          )}
+        {/* <div className="integrations-section">
+          {!isCollapsed && <p className="section-title">Integrations</p>}
           <div className="nav-items">
             {integrations.map((item, index) => (
               <IntegrationLink
                 key={index}
                 icon={item.icon}
-                onClick={() => {
-                  if (isCollapsed) {
-                    setIsCollapsed(false);
-                  }
-                }}
                 label={item.label}
                 bgColor={item.bgColor}
                 borderColor={item.borderColor}
@@ -105,9 +80,8 @@ export  default function Sidebar() {
               />
             ))}
           </div>
-        </div>
+        </div> */}
       </nav>
-
 
       <div className="sidebar-footer">
         <div className="user-profile">
@@ -133,46 +107,44 @@ export  default function Sidebar() {
   );
 }
 
-function NavLink({ icon: Icon, label, active = false, collapsed, onClick }) {
+function NavLink({ icon: Icon, label, active = false, collapsed }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <button
-      className={`nav-link ${active ? 'active' : ''} ${isHovered ? 'hovered' : ''}`}
+      className={`nav-link ${active ? "active" : ""} ${
+        isHovered ? "hovered" : ""
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={onClick}
     >
       <Icon size={28} className="nav-icon" />
       {!collapsed && <span className="nav-label">{label}</span>}
-      {collapsed && isHovered && (
-        <div className="tooltip">
-          {label}
-        </div>
-      )}
+      {collapsed && isHovered && <div className="tooltip">{label}</div>}
     </button>
   );
 }
 
-function IntegrationLink({ icon: Icon, label, bgColor, borderColor, collapsed, onClick }) {
+function IntegrationLink({
+  icon: Icon,
+  label,
+  bgColor,
+  borderColor,
+  collapsed,
+}) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <button
-      className={`nav-link integration-link ${isHovered ? 'hovered' : ''}`}
+      className={`nav-link integration-link ${isHovered ? "hovered" : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={onClick}
     >
-      <div className={`integration-icon ${bgColor} ${borderColor || ''}`}>
+      <div className={`integration-icon ${bgColor} ${borderColor || ""}`}>
         <Icon size={22} className="icon-svg" />
       </div>
       {!collapsed && <span className="nav-label">{label}</span>}
-      {collapsed && isHovered && (
-        <div className="tooltip">
-          {label}
-        </div>
-      )}
+      {collapsed && isHovered && <div className="tooltip">{label}</div>}
     </button>
   );
 }
