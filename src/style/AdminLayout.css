@@ -1,0 +1,38 @@
+/* Admin Layout Styles */
+.admin-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.admin-main-content {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+/* Optional placeholder styling (used by simple pages) */
+.admin-page-placeholder {
+  padding: 2rem;
+  text-align: center;
+}
+
+.admin-page-placeholder h1 {
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.admin-page-placeholder p {
+  color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    flex-direction: column;
+  }
+
+  .admin-main-content {
+    margin-left: 0;
+  }
+}

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Menu, Search, Square, Triangle, LogOut } from "lucide-react";
-import { NAV_ITEMS_BY_ROLE } from "./navConfig";
+import { NAV_ITEMS_BY_ROLE } from "../constants/constant";
 import "../style/Sidebar.css";
 
-export default function Sidebar({ role = "pt" }) {
+export default function Sidebar({ role = "pt", currentPage, onPageChange }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navItems = NAV_ITEMS_BY_ROLE[role] || [];
@@ -57,11 +57,13 @@ export default function Sidebar({ role = "pt" }) {
         <div className="nav-items">
           {navItems.map((item, index) => (
             <NavLink
-              key={index}
+               key={index}
               icon={item.icon}
               label={item.label}
-              active={item.active}
+              pageKey={item.key}
+              active={currentPage === item.key}
               collapsed={isCollapsed}
+              onClick={() => onPageChange && onPageChange(item.key)}
             />
           ))}
         </div>
@@ -107,7 +109,7 @@ export default function Sidebar({ role = "pt" }) {
   );
 }
 
-function NavLink({ icon: Icon, label, active = false, collapsed }) {
+function NavLink({ icon: Icon, label, pageKey, active = false, collapsed, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -117,6 +119,7 @@ function NavLink({ icon: Icon, label, active = false, collapsed }) {
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
     >
       <Icon size={28} className="nav-icon" />
       {!collapsed && <span className="nav-label">{label}</span>}
