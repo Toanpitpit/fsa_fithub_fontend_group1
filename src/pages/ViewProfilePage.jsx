@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import { Container } from "react-bootstrap";
 import ProfileUser from "../components/profile"; 
 import "../style/ProfilePage.css"
-export default function ViewProfile({ id }) {
+import Header from "../components/Header";
+export default function ViewProfile() {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   return (
@@ -24,7 +25,7 @@ export default function ViewProfile({ id }) {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(255, 255, 255, 0.1)",
+          background: "rgba(248, 241, 241, 0.1)",
           backdropFilter: "blur(10px)",
           zIndex: 0
         }}
@@ -44,73 +45,9 @@ export default function ViewProfile({ id }) {
           zIndex: 10
         }}
       >
-        <Container>
-          <div className="d-flex justify-content-between align-items-center py-3">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="d-flex align-items-center gap-3"
-            >
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                  borderRadius: "10px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "white",
-                  fontWeight: "bold"
-                }}
-              >
-                U
-              </div>
-              <h4 className="mb-0 fw-bold text-dark">User Profile</h4>
-            </motion.div>
-            
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="d-flex gap-3"
-            >
-              <button
-                style={{
-                  background: "transparent",
-                  border: "2px solid #667eea",
-                  color: "#667eea",
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  fontWeight: "600",
-                  transition: "all 0.3s ease"
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = "#667eea";
-                  e.target.style.color = "white";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = "transparent";
-                  e.target.style.color = "#667eea";
-                }}
-              >
-                Back to Home
-              </button>
-              <button
-                style={{
-                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                  border: "none",
-                  color: "white",
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  fontWeight: "600"
-                }}
-              >
-                Settings
-              </button>
-            </motion.div>
-          </div>
-        </Container>
+        <Header></Header>
       </motion.div>
 
-      {/* Main Content - Profile */}
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -128,7 +65,6 @@ export default function ViewProfile({ id }) {
         </Container>
       </motion.div>
 
-      {/* Footer giả */}
       <motion.div
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -204,6 +140,7 @@ export default function ViewProfile({ id }) {
             </motion.div>
           </div>
         </Container>
+
       </motion.div>
     </motion.div>
   );

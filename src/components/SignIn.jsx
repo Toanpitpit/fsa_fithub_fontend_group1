@@ -40,7 +40,7 @@ export default function SignIn({ onSwitchToSignUp }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: email,
+          emailOrUsername: email,
           password: password,
         }),
       });
@@ -53,11 +53,10 @@ export default function SignIn({ onSwitchToSignUp }) {
 
       if (data.success) {
         localStorage.setItem("access_token", data.data.tokens.access_token);
-        localStorage.setItem("refresh_token", data.data.tokens.refresh_token);
         localStorage.setItem("user", JSON.stringify(data.data.user));
-         setSuccessMessage("Login Successfuly , Welcome");
+        setSuccessMessage("Login Successfuly , Welcome");
         setTimeout(() => {
-           navigate("/profile");
+           navigate(`/profile/${data.data.user.id}`);
         }, 1000);
        
         return data;
