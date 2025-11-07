@@ -42,7 +42,8 @@ export const avatar_url_default =
 export const cover_url_default =
   "https://images.unsplash.com/photo-1689094195667-3dae89dd11fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuYXR1cmUlMjBsYW5kc2NhcGUlMjBiYW5uZXJ8ZW58MXx8fHwxNzYyMjY2MDA1fDA&ixlib=rb-4.1.0&q=80&w=1080";
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+export const API_BASE_URL = "http://localhost:8080/api";
+
 export const API_ENDPOINTS = {
   REGISTER: `${API_BASE_URL}/auth/register`,
   LOGIN: `${API_BASE_URL}/auth/login`,
@@ -50,6 +51,9 @@ export const API_ENDPOINTS = {
   RESEND_VERIFICATION_EMAIL: `${API_BASE_URL}/auth/resend-verification-email`,
   LOGOUT: `${API_BASE_URL}/auth/logout`,
   PROFILE: `${API_BASE_URL}/profile`,
+  UPLOAD_MULTIPLE_FILES: `${API_BASE_URL}/upload/multiple`,
+  UPLOAD_SINGLE_FILE: `${API_BASE_URL}/upload/single`,
+  TRAINER_APPLICATION: `${API_BASE_URL}/trainer/application`,
 };
 
 // App Constants
