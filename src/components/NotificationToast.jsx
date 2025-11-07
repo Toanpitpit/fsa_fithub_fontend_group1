@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useNotificationContext } from '../contexts/NotificationContext';
 import '../style/NotificationToast.css';
 
@@ -9,6 +9,7 @@ import '../style/NotificationToast.css';
 export const NotificationToast = () => {
   const { notifications } = useNotificationContext();
   const [toasts, setToasts] = useState([]);
+  const shownNotificationIds = useRef(new Set());
 
   const removeToast = useCallback((id) => {
     setToasts(prev => prev.filter(t => t.id !== id));
@@ -18,30 +19,26 @@ export const NotificationToast = () => {
     if (notifications.length > 0) {
       const latestNotification = notifications[0];
       
-      // Chỉ show toast cho notification mới (trong vòng 5 giây)
-      const notificationAge = Date.now() - new Date(latestNotification.createdAt).getTime();
-      
-      if (notificationAge < 5000) {
-        // Kiểm tra xem toast này đã được show chưa
-        const alreadyShown = toasts.some(t => t.id === latestNotification.id);
+      // Kiểm tra xem toast này đã được show chưa bằng useRef
+      if (!shownNotificationIds.current.has(latestNotification.id)) {
+        // Đánh dấu notification này đã show
+        shownNotificationIds.current.add(latestNotification.id);
         
-        if (!alreadyShown) {
-          const newToast = {
-            id: latestNotification.id,
-            ...latestNotification
-          };
-
-          // Thêm toast mới, giữ tối đa 3 toasts
-          setToasts(prev => [newToast, ...prev.slice(0, 2)]);
-
-          // Auto remove sau 5 giây
-          setTimeout(() => {
-            removeToast(newToast.id);
-          }, 5000);
-        }
+        const newToast = {
+          id: latestNotification.id,
+          ...latestNotification
+        };
+  
+        // Thêm toast mới, giữ tối đa 3 toasts
+        setToasts(prev => [newToast, ...prev.slice(0, 2)]);
+  
+        // Auto remove sau 5 giây
+        setTimeout(() => {
+          removeToast(newToast.id);
+        }, 5000);
       }
     }
-  }, [notifications, toasts, removeToast]);
+  }, [notifications, removeToast])
 
   const getNotificationIcon = (type) => {
     const icons = {

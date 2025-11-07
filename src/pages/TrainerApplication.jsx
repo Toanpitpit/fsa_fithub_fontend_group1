@@ -2,45 +2,25 @@ import { useState, useRef } from "react";
 import { Form, Button, Spinner } from "react-bootstrap";
 import { FaUser, FaFileAlt, FaUpload, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import "../style/TrainerApplication.css";
-import { useFileUpload } from "../hooks/useFileUpload";
+import { useTrainerApplication } from "../hooks/useTrainerApplication";
 
 export default function TrainerApplication() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    specialty: "",
-  });
-  const [selectedFiles, setSelectedFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadedUrls, setUploadedUrls] = useState([]);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const fileInputRef = useRef(null);
 
-  const { uploadFiles, isLoading, error, progress, resetError } = useFileUpload();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleFileSelect = (files) => {
-    // Convert to array if needed
-    const fileArray = Array.from(files);
-    
-    // Validate all files are PDF
-    const invalidFiles = fileArray.filter(file => file.type !== "application/pdf");
-    
-    if (invalidFiles.length > 0) {
-      alert("Chỉ chấp nhận file PDF!");
-      return;
-    }
-    
-    // Add new files to existing ones
-    setSelectedFiles(prev => [...prev, ...fileArray]);
-    resetError();
-  };
+  const {
+    formData,
+    selectedFiles,
+    isLoading,
+    submitSuccess,
+    error,
+    handleFieldChange,
+    handleFileSelect,
+    removeFile,
+    removeAllFiles,
+    submitApplication,
+    resetForm,
+  } = useTrainerApplication();
 
   const handleFileInputChange = (e) => {
     const files = e.target.files;
@@ -73,15 +53,14 @@ export default function TrainerApplication() {
   };
 
   const handleRemoveFile = (index) => {
-    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    removeFile(index);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
   const handleRemoveAllFiles = () => {
-    setSelectedFiles([]);
-    setUploadedUrls([]);
+    removeAllFiles();
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -89,55 +68,19 @@ export default function TrainerApplication() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    resetError();
-    setSubmitSuccess(false);
 
-    // Validate
-    if (!formData.fullName.trim()) {
-      alert("Vui lòng nhập họ tên đầy đủ!");
-      return;
+    // Submit application (validation and upload handled by hook)
+    const result = await submitApplication();
+
+    if (result.success) {
+      // Reset form after success
+      setTimeout(() => {
+        resetForm();
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }, 3000);
     }
-    if (!formData.specialty.trim()) {
-      alert("Vui lòng nhập chuyên môn!");
-      return;
-    }
-    if (selectedFiles.length === 0) {
-      alert("Vui lòng chọn ít nhất một file chứng chỉ (PDF)!");
-      return;
-    }
-
-    // Upload all files
-    const uploadResult = await uploadFiles(selectedFiles, {
-      maxSize: 10 * 1024 * 1024, // 10MB per file
-      maxFiles: 10,
-      allowedTypes: ["application/pdf"],
-    });
-
-    if (!uploadResult.success) {
-      return;
-    }
-
-    setUploadedUrls(uploadResult.urls);
-
-    // TODO: Submit form data with uploaded URLs to backend
-    const applicationData = {
-      fullName: formData.fullName.trim(),
-      specialty: formData.specialty.trim(),
-      certificateUrls: uploadResult.urls,
-    };
-
-    console.log("Application Data:", applicationData);
-
-    // Simulate success
-    setSubmitSuccess(true);
-    
-    // Reset form after success
-    setTimeout(() => {
-      setFormData({ fullName: "", specialty: "" });
-      setSelectedFiles([]);
-      setUploadedUrls([]);
-      setSubmitSuccess(false);
-    }, 3000);
   };
 
   return (
@@ -167,30 +110,30 @@ export default function TrainerApplication() {
         )}
 
         <Form onSubmit={handleSubmit} className="trainer-form">
-          {/* Full Name Field */}
+          {/* Qualifications Field */}
           <Form.Group className="mb-4 position-relative">
-            <Form.Label className="trainer-label">Full Name</Form.Label>
+            <Form.Label className="trainer-label">Qualifications</Form.Label>
             <Form.Control
-              type="text"
-              name="fullName"
-              placeholder="Enter your full name"
-              value={formData.fullName}
-              onChange={handleChange}
+              type="textarea"
+              name="qualifications"
+              placeholder="Enter your qualifications (e.g., Certified Personal Trainer, Nutrition Specialist)"
+              value={formData.qualifications}
+              onChange={handleFieldChange}
               className="trainer-input"
               disabled={isLoading}
             />
             <FaUser className="trainer-input-icon" />
           </Form.Group>
 
-          {/* Specialty Field */}
+          {/* Experience Details Field */}
           <Form.Group className="mb-4 position-relative">
-            <Form.Label className="trainer-label">Specialty</Form.Label>
+            <Form.Label className="trainer-label">Experience Details</Form.Label>
             <Form.Control
-              type="text"
-              name="specialty"
-              placeholder="e.g., Yoga, Weight Training, HIIT"
-              value={formData.specialty}
-              onChange={handleChange}
+              type="textarea"
+              name="experience_details"
+              placeholder="Describe your experience (e.g., 5+ years training clients in yoga and HIIT)"
+              value={formData.experience_details}
+              onChange={handleFieldChange}
               className="trainer-input"
               disabled={isLoading}
             />
@@ -287,19 +230,6 @@ export default function TrainerApplication() {
                       + Add More Files
                     </Button>
                   )}
-                </div>
-              )}
-
-              {/* Upload Progress */}
-              {isLoading && (
-                <div className="trainer-upload-progress">
-                  <div className="trainer-progress-bar-container">
-                    <div
-                      className="trainer-progress-bar-fill"
-                      style={{ width: `${progress}%` }}
-                    ></div>
-                  </div>
-                  <p className="trainer-progress-text">Uploading {selectedFiles.length} file(s)... {progress}%</p>
                 </div>
               )}
             </div>

@@ -11,7 +11,7 @@ const uploadClient = axios.create({
 // Interceptor để tự động thêm token vào header (nếu có)
 uploadClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -27,31 +27,23 @@ export const uploadService = {
   /**
    * Upload một file duy nhất lên cloud
    * @param {File} file - File cần upload
-   * @param {Function} onUploadProgress - Callback để theo dõi tiến trình upload (optional)
+   * @param {string} folder - Folder path (optional, e.g., "trainers/certificates")
    * @returns {Promise<string>} URL của file đã upload
    */
-  uploadSingleFile: async (file, onUploadProgress = null) => {
+  uploadSingleFile: async (file, folder = null) => {
     try {
       // Tạo FormData và thêm file
       const formData = new FormData();
       formData.append('file', file);
-
-      // Cấu hình request
-      const config = {
-        onUploadProgress: onUploadProgress
-          ? (progressEvent) => {
-              const percentCompleted = Math.round(
-                (progressEvent.loaded * 100) / progressEvent.total
-              );
-              onUploadProgress(percentCompleted);
-            }
-          : undefined,
-      };
+      
+      // Thêm folder nếu có
+      if (folder) {
+        formData.append('folder', folder);
+      }
 
       const response = await uploadClient.post(
-        API_ENDPOINTS.UPLOAD_FILE,
-        formData,
-        config
+        API_ENDPOINTS.UPLOAD_SINGLE_FILE,
+        formData
       );
 
       // Trả về URL từ response
@@ -80,33 +72,25 @@ export const uploadService = {
   /**
    * Upload nhiều file cùng lúc lên cloud
    * @param {File[]} files - Mảng các file cần upload
-   * @param {Function} onUploadProgress - Callback để theo dõi tiến trình upload (optional)
+   * @param {string} folder - Folder path (optional, e.g., "trainers/certificates")
    * @returns {Promise<string[]>} Mảng URL của các file đã upload
    */
-  uploadMultipleFiles: async (files, onUploadProgress = null) => {
+  uploadMultipleFiles: async (files, folder = null) => {
     try {
       // Tạo FormData và thêm tất cả các file
       const formData = new FormData();
       files.forEach((file) => {
         formData.append('files', file);
       });
-
-      // Cấu hình request
-      const config = {
-        onUploadProgress: onUploadProgress
-          ? (progressEvent) => {
-              const percentCompleted = Math.round(
-                (progressEvent.loaded * 100) / progressEvent.total
-              );
-              onUploadProgress(percentCompleted);
-            }
-          : undefined,
-      };
+      
+      // Thêm folder nếu có
+      if (folder) {
+        formData.append('folder', folder);
+      }
 
       const response = await uploadClient.post(
-        API_ENDPOINTS.UPLOAD_FILE,
-        formData,
-        config
+        API_ENDPOINTS.UPLOAD_MULTIPLE_FILES,
+        formData
       );
 
       // Trả về mảng URL từ response

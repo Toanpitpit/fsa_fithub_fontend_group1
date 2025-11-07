@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -10,9 +10,9 @@ export const useNotifications = () => {
   const eventSourceRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
 
-  // Lấy auth token
+  // Get access token
   const getAuthToken = () => {
-    return localStorage.getItem('authToken');
+    return localStorage.getItem('access_token');
   };
 
   // Connect to SSE
@@ -21,7 +21,6 @@ export const useNotifications = () => {
     
     if (!token) {
       setError('No authentication token found');
-      console.warn('⚠️ No auth token, skipping SSE connection');
       return;
     }
 
@@ -32,8 +31,8 @@ export const useNotifications = () => {
 
     try {
       // Note: EventSource không support custom headers trong browser
-      // Cần implement proxy hoặc pass token qua query params ở backend
-      const url = `${API_BASE_URL}/notifications/stream`;
+      // Pass token qua query parameter
+      const url = `${API_BASE_URL}/notifications/stream?token=${encodeURIComponent(token)}`;
       const eventSource = new EventSource(url);
       
       eventSource.addEventListener('connected', (event) => {
@@ -205,7 +204,6 @@ export const useNotifications = () => {
           prev.map(n => ({ ...n, isRead: true }))
         );
         setUnreadCount(0);
-        console.log('✅ Marked all notifications as read');
       }
     } catch (error) {
       console.error('Error marking all as read:', error);
@@ -216,7 +214,6 @@ export const useNotifications = () => {
   const requestPermission = useCallback(async () => {
     if ('Notification' in window && Notification.permission === 'default') {
       const permission = await Notification.requestPermission();
-      console.log('🔔 Notification permission:', permission);
     }
   }, []);
 
@@ -233,7 +230,7 @@ export const useNotifications = () => {
     return () => {
       disconnect();
     };
-  }, []); // Empty deps để chỉ chạy 1 lần
+  }, []);
 
   return {
     notifications,

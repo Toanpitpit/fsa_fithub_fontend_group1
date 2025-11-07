@@ -7,7 +7,6 @@ import { uploadService } from '../services/uploadService';
 export const useFileUpload = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [progress, setProgress] = useState(0);
 
   /**
    * Validate file
@@ -75,12 +74,12 @@ export const useFileUpload = () => {
   /**
    * Hàm xử lý upload một file
    * @param {File} file - File cần upload
-   * @param {Object} options - Các tùy chọn validate (optional)
+   * @param {Object} options - Các tùy chọn validate và upload (optional)
+   * @param {string} options.folder - Folder path để lưu file (e.g., "trainers/certificates")
    * @returns {Promise<Object>} - {success: boolean, url?: string, error?: string}
    */
   const uploadFile = async (file, options = {}) => {
     setError('');
-    setProgress(0);
 
     // Validate file
     const validationError = validateFile(file, options);
@@ -92,16 +91,10 @@ export const useFileUpload = () => {
     setIsLoading(true);
 
     try {
-      // Callback để cập nhật progress
-      const onUploadProgress = (percent) => {
-        setProgress(percent);
-      };
-
-      // Gọi API upload
-      const url = await uploadService.uploadSingleFile(file, onUploadProgress);
+      // Gọi API upload với folder (nếu có)
+      const url = await uploadService.uploadSingleFile(file, options.folder);
 
       console.log('Upload successful:', url);
-      setProgress(100);
 
       return { success: true, url };
     } catch (err) {
@@ -109,7 +102,6 @@ export const useFileUpload = () => {
       const errorMessage = err.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.';
       setError(errorMessage);
       console.error('Upload error:', err);
-      setProgress(0);
       return { success: false, error: errorMessage };
     } finally {
       setIsLoading(false);
@@ -119,12 +111,12 @@ export const useFileUpload = () => {
   /**
    * Hàm xử lý upload nhiều file
    * @param {File[]} files - Mảng các file cần upload
-   * @param {Object} options - Các tùy chọn validate (optional)
+   * @param {Object} options - Các tùy chọn validate và upload (optional)
+   * @param {string} options.folder - Folder path để lưu file (e.g., "trainers/certificates")
    * @returns {Promise<Object>} - {success: boolean, urls?: string[], error?: string}
    */
   const uploadFiles = async (files, options = {}) => {
     setError('');
-    setProgress(0);
 
     // Chuyển đổi FileList sang Array nếu cần
     const fileArray = Array.isArray(files) ? files : Array.from(files);
@@ -139,19 +131,10 @@ export const useFileUpload = () => {
     setIsLoading(true);
 
     try {
-      // Callback để cập nhật progress
-      const onUploadProgress = (percent) => {
-        setProgress(percent);
-      };
-
-      // Gọi API upload
-      const urls = await uploadService.uploadMultipleFiles(
-        fileArray,
-        onUploadProgress
-      );
+      // Gọi API upload với folder (nếu có)
+      const urls = await uploadService.uploadMultipleFiles(fileArray, options.folder);
 
       console.log('Upload successful:', urls);
-      setProgress(100);
 
       return { success: true, urls };
     } catch (err) {
@@ -159,7 +142,6 @@ export const useFileUpload = () => {
       const errorMessage = err.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.';
       setError(errorMessage);
       console.error('Upload error:', err);
-      setProgress(0);
       return { success: false, error: errorMessage };
     } finally {
       setIsLoading(false);
@@ -174,18 +156,10 @@ export const useFileUpload = () => {
   };
 
   /**
-   * Reset progress
-   */
-  const resetProgress = () => {
-    setProgress(0);
-  };
-
-  /**
    * Reset tất cả state
    */
   const reset = () => {
     setError('');
-    setProgress(0);
     setIsLoading(false);
   };
 
@@ -194,9 +168,7 @@ export const useFileUpload = () => {
     uploadFiles,
     isLoading,
     error,
-    progress,
     resetError,
-    resetProgress,
     reset,
   };
 };
