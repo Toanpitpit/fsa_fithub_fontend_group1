@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+SIGNUP_IMPLEMENTATION.md
+TEST_VERIFY_EMAIL.md
+QUICK_START.md  
+VERIFY_EMAIL_IMPLEMENTATION.md
