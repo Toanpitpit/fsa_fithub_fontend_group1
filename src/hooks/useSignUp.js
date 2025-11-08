@@ -142,7 +142,7 @@ export const useSignUp = () => {
         password: formData.password,
         fullName: formData.fullname.trim(),
         dateOfBirth: formData.dateOfBirth, // YYYY-MM-DD
-        gender: formData.gender.toUpperCase(),
+        gender: formData.gender.toUpperCase(), // Backend có enum Gender (MALE, FEMALE, OTHER)
       };
 
       console.log('Sending registration data:', dataToSend);
