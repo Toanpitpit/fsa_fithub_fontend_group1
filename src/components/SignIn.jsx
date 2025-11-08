@@ -12,7 +12,6 @@ import { FcGoogle } from "react-icons/fc";
 import "../style/SignIn.css";
 import { useNavigate } from "react-router-dom";
 
-
 export default function SignIn({ onSwitchToSignUp }) {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -27,7 +26,6 @@ export default function SignIn({ onSwitchToSignUp }) {
   const navigate = useNavigate();
 
   const clickSignIn = async () => {
-
     try {
       const loginRequest = {
         emailOrUsername: emailOrUsername,
@@ -53,8 +51,9 @@ export default function SignIn({ onSwitchToSignUp }) {
         sessionStorage.setItem("refresh_token", tokens.refresh_token); // default 1 ngày
       }
 
-
-      navigate("/home", { state: { successMessage: loginResponse.data?.message + " 🎉" } });
+      navigate("/home", {
+        state: { successMessage: loginResponse.data?.message + " 🎉" },
+      });
     } catch (error) {
       const errMsg = error.response?.data?.message || error.message;
 

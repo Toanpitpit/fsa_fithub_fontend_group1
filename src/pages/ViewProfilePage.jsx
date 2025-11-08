@@ -25,7 +25,7 @@ export default function ViewProfile() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(248, 241, 241, 0.1)",
+          background: "rgba(163, 29, 29, 0.1)",
           backdropFilter: "blur(10px)",
           zIndex: 0
         }}
@@ -37,9 +37,9 @@ export default function ViewProfile() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.1 }}
         style={{
-          background: "rgba(255, 255, 255, 0.95)",
+          background: "rgba(133, 41, 41, 0.95)",
           backdropFilter: "blur(10px)",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
+          borderBottom: "1px solid rgba(139, 8, 8, 0.2)",
           boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
           position: "relative",
           zIndex: 10

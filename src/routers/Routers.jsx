@@ -3,9 +3,7 @@ import AuthenticationPage from "../pages/Authentication";
 import VerifyEmail from "../components/VerifyEmail";
 import HomePage from "../pages/HomePage";
 import ViewProfile from "../pages/ViewProfilePage";
-import ProfileComplete from "../components/profile";
 import Sidebar from "../components/sidebar";
-import HomePage from "../pages/HomePage";
 import TrainerApplication from "../pages/TrainerApplication";
 
 export default function SwitchRouters() {
@@ -19,7 +17,7 @@ export default function SwitchRouters() {
       <Route path="/profile/:id" element={<ViewProfile />} />
       <Route path="/" element={<HomePage />} />
       <Route path="/home" element={<HomePage />} />
-      <Route path="/profile" element={<ViewProfile />}/>
+      <Route path="/profile/:id" element={<ViewProfile />}/>
       <Route path="/trainer/application" element={<TrainerApplication />}/>
       <Route path="*" element={<Navigate to="/auth" replace />} />
     </Routes>
