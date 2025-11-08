@@ -51,20 +51,20 @@ export const uploadService = {
         return response.data.data.url;
       }
 
-      throw new Error('URL không tồn tại trong response');
+      throw new Error('URL not found in response');
     } catch (error) {
-      // Xử lý lỗi từ backend
+      // Handle errors from backend
       if (error.response) {
-        // Server trả về response với status code lỗi
-        throw new Error(error.response.data.message || 'Upload file thất bại');
+        // Server returned error response
+        throw new Error(error.response.data.message || 'File upload failed');
       } else if (error.request) {
-        // Request được gửi nhưng không nhận được response
+        // Request sent but no response received
         throw new Error(
-          'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.'
+          'Cannot connect to server. Please check your network connection.'
         );
       } else {
-        // Lỗi khác
-        throw new Error(error.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+        // Other errors
+        throw new Error(error.message || 'An error occurred. Please try again.');
       }
     }
   },
@@ -109,22 +109,22 @@ export const uploadService = {
         }
       }
 
-      throw new Error('URL không tồn tại trong response');
+      throw new Error('URL not found in response');
     } catch (error) {
-      // Xử lý lỗi từ backend
+      // Handle errors from backend
       if (error.response) {
-        // Server trả về response với status code lỗi
+        // Server returned error response
         throw new Error(
-          error.response.data.message || 'Upload các file thất bại'
+          error.response.data.message || 'Multiple files upload failed'
         );
       } else if (error.request) {
-        // Request được gửi nhưng không nhận được response
+        // Request sent but no response received
         throw new Error(
-          'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.'
+          'Cannot connect to server. Please check your network connection.'
         );
       } else {
-        // Lỗi khác
-        throw new Error(error.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+        // Other errors
+        throw new Error(error.message || 'An error occurred. Please try again.');
       }
     }
   },

@@ -55,24 +55,24 @@ export const trainerService = {
         // Server trả về response với status code lỗi
         const errorMessage = error.response.data.message || 'Failed to submit application';
         
-        // Xử lý các trường hợp lỗi cụ thể
+        // Handle specific error cases
         if (error.response.status === 401) {
-          throw new Error('Bạn cần đăng nhập để submit application');
+          throw new Error('You need to login to submit application');
         } else if (error.response.status === 400) {
           throw new Error(errorMessage);
         } else if (error.response.status === 409) {
-          throw new Error('Bạn đã submit application rồi');
+          throw new Error('You have already submitted an application');
         } else {
           throw new Error(errorMessage);
         }
       } else if (error.request) {
-        // Request được gửi nhưng không nhận được response
+        // Request sent but no response received
         throw new Error(
-          'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.'
+          'Cannot connect to server. Please check your network connection.'
         );
       } else {
-        // Lỗi khác
-        throw new Error(error.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+        // Other errors
+        throw new Error(error.message || 'An error occurred. Please try again.');
       }
     }
   },
@@ -102,10 +102,10 @@ export const trainerService = {
         );
       } else if (error.request) {
         throw new Error(
-          'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.'
+          'Cannot connect to server. Please check your network connection.'
         );
       } else {
-        throw new Error(error.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+        throw new Error(error.message || 'An error occurred. Please try again.');
       }
     }
   },

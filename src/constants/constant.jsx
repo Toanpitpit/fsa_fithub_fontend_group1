@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
   UPLOAD_MULTIPLE_FILES: `${API_BASE_URL}/upload/multiple`,
   UPLOAD_SINGLE_FILE: `${API_BASE_URL}/upload/single`,
   TRAINER_APPLICATION: `${API_BASE_URL}/trainer/application`,
+  UPLOAD_CONFIG: `${API_BASE_URL}/config/upload`,
 };
 
 // App Constants

@@ -14,6 +14,7 @@ export default function TrainerApplication() {
     isLoading,
     submitSuccess,
     error,
+    uploadConfig,
     handleFieldChange,
     handleFileSelect,
     removeFile,
@@ -143,7 +144,7 @@ export default function TrainerApplication() {
           {/* Certificate Upload Field */}
           <Form.Group className="mb-4">
             <Form.Label className="trainer-label">
-              Certificates (PDF only) - Multiple files allowed
+              Certificates - Multiple files allowed
             </Form.Label>
             
             <div
@@ -180,7 +181,7 @@ export default function TrainerApplication() {
                     Browse Files
                   </Button>
                   <p className="trainer-drop-zone-info">
-                    Maximum file size: 10MB per file | Maximum 10 files
+                    Maximum file size: {uploadConfig?.maxDocumentUploadSizeMb || 10}MB per file | Maximum {uploadConfig?.maxTrainerDocuments || 10} files
                   </p>
                 </div>
               ) : (

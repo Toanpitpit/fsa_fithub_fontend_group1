@@ -20,21 +20,21 @@ export const useFileUpload = () => {
       allowedTypes = null, // null = cho phép tất cả, hoặc array như ['image/jpeg', 'image/png']
     } = options;
 
-    // Kiểm tra file tồn tại
+    // Check if file exists
     if (!file) {
-      return 'Vui lòng chọn file để upload.';
+      return 'Please select a file to upload.';
     }
 
-    // Kiểm tra kích thước file
+    // Check file size
     if (file.size > maxSize) {
       const maxSizeMB = (maxSize / (1024 * 1024)).toFixed(2);
-      return `File vượt quá kích thước cho phép (${maxSizeMB}MB).`;
+      return `File size exceeds the limit (${maxSizeMB}MB).`;
     }
 
-    // Kiểm tra loại file
+    // Check file type
     if (allowedTypes && Array.isArray(allowedTypes)) {
       if (!allowedTypes.includes(file.type)) {
-        return `Định dạng file không được hỗ trợ. Chỉ chấp nhận: ${allowedTypes.join(', ')}`;
+        return `File type not supported. Only accept: ${allowedTypes.join(', ')}`;
       }
     }
 
@@ -50,17 +50,17 @@ export const useFileUpload = () => {
   const validateFiles = (files, options = {}) => {
     const { maxFiles = 10 } = options;
 
-    // Kiểm tra có file không
+    // Check if files exist
     if (!files || files.length === 0) {
-      return 'Vui lòng chọn ít nhất một file để upload.';
+      return 'Please select at least one file to upload.';
     }
 
-    // Kiểm tra số lượng file
+    // Check number of files
     if (files.length > maxFiles) {
-      return `Chỉ được upload tối đa ${maxFiles} file cùng lúc.`;
+      return `Maximum ${maxFiles} files allowed at once.`;
     }
 
-    // Validate từng file
+    // Validate each file
     for (let i = 0; i < files.length; i++) {
       const fileError = validateFile(files[i], options);
       if (fileError) {
@@ -99,7 +99,7 @@ export const useFileUpload = () => {
       return { success: true, url };
     } catch (err) {
       // Handle error
-      const errorMessage = err.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+      const errorMessage = err.message || 'An error occurred. Please try again.';
       setError(errorMessage);
       console.error('Upload error:', err);
       return { success: false, error: errorMessage };
@@ -139,7 +139,7 @@ export const useFileUpload = () => {
       return { success: true, urls };
     } catch (err) {
       // Handle error
-      const errorMessage = err.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+      const errorMessage = err.message || 'An error occurred. Please try again.';
       setError(errorMessage);
       console.error('Upload error:', err);
       return { success: false, error: errorMessage };

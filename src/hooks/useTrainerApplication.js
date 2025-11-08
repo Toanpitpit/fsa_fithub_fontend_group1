@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useFileUpload } from "./useFileUpload";
 import { trainerService } from "../services/trainerService";
+import { useUploadConfig } from "./useUploadConfig";
 
 export function useTrainerApplication() {
   const [formData, setFormData] = useState({
@@ -13,23 +14,24 @@ export function useTrainerApplication() {
   const [validationError, setValidationError] = useState(null);
 
   const { uploadFiles, isLoading, error: uploadError, resetError } = useFileUpload();
+  const { config: uploadConfig, loading: configLoading } = useUploadConfig();
 
   // Validate form fields
   const validateForm = () => {
     setValidationError(null);
 
     if (!formData.qualifications.trim()) {
-      setValidationError("Vui lòng nhập trình độ chuyên môn!");
+      setValidationError("Please enter your qualifications!");
       return false;
     }
 
     if (!formData.experience_details.trim()) {
-      setValidationError("Vui lòng nhập chi tiết kinh nghiệm!");
+      setValidationError("Please enter your experience details!");
       return false;
     }
 
     if (selectedFiles.length === 0) {
-      setValidationError("Vui lòng chọn ít nhất một file chứng chỉ (PDF)!");
+      setValidationError("Please select at least one certificate file (PDF)!");
       return false;
     }
 
@@ -42,7 +44,7 @@ export function useTrainerApplication() {
     const invalidFiles = fileArray.filter(file => file.type !== "application/pdf");
     
     if (invalidFiles.length > 0) {
-      setValidationError("Chỉ chấp nhận file PDF!");
+      setValidationError("Only PDF files are accepted!");
       return null;
     }
     
@@ -92,11 +94,15 @@ export function useTrainerApplication() {
     }
 
     // Upload all files to trainers/certificates folder
+    // Use document-specific config from backend or fallback to defaults
+    const maxSizeMb = uploadConfig?.maxDocumentUploadSizeMb || 10.0;
+    const maxFiles = uploadConfig?.maxTrainerDocuments || 10;
+    
     const uploadResult = await uploadFiles(selectedFiles, {
       folder: "trainers/certificates",
-      maxSize: 10 * 1024 * 1024, // 10MB per file
-      maxFiles: 10,
-      allowedTypes: ["application/pdf"],
+      maxSize: maxSizeMb * 1024 * 1024, // Convert MB to bytes
+      maxFiles: maxFiles,
+      allowedTypes: ["application/pdf"], // Only PDF for certificates
     });
 
     if (!uploadResult.success) {
@@ -133,7 +139,7 @@ export function useTrainerApplication() {
         urls: uploadResult.urls 
       };
     } catch (err) {
-      const errorMessage = err.message || "Đã có lỗi xảy ra khi submit application";
+      const errorMessage = err.message || "An error occurred while submitting application";
       setValidationError(errorMessage);
       console.error("Submit application error:", err);
       return { success: false, error: errorMessage };
@@ -157,9 +163,10 @@ export function useTrainerApplication() {
     uploadedUrls,
     
     // States
-    isLoading,
+    isLoading: isLoading || configLoading,
     submitSuccess,
     error: validationError || uploadError,
+    uploadConfig, // Expose config for UI display
     
     // Actions
     handleFieldChange,
