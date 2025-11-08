@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Menu, Search, Square, Triangle, LogOut } from "lucide-react";
-import { NAV_ITEMS_BY_ROLE } from "./navConfig";
+import { NAV_ITEMS_BY_ROLE } from "../constants/constant";
 import "../style/Sidebar.css";
 
 export default function Sidebar({ role = "pt" }) {
