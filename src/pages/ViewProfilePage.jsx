@@ -140,7 +140,6 @@ export default function ViewProfile() {
             </motion.div>
           </div>
         </Container>
-
       </motion.div>
     </motion.div>
   );

@@ -144,7 +144,11 @@
 .auth-submit-btn {
   width: 100%;
   padding: 16px 24px;
+<<<<<<< HEAD
   background: linear-gradient(to right, #6366f1, #a855f7);
+=======
+  background: linear-gradient(135deg, #0f141b 0%, #d23948 50%, #db4e5c 100%) !important;
+>>>>>>> ha_sprint1
   border: none;
   border-radius: 8px;
   color: white;
@@ -157,7 +161,11 @@
 }
 
 .auth-submit-btn:hover {
+<<<<<<< HEAD
   background: linear-gradient(to right, #4f46e5, #9333ea);
+=======
+  background: linear-gradient(to right, #09090e, #c42626) !important;
+>>>>>>> ha_sprint1
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   transform: scale(1.05);
 }
@@ -199,8 +207,12 @@
 
 .auth-gradient-side {
   position: relative;
+<<<<<<< HEAD
   background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #2563eb 100%);
   padding: 48px;
+=======
+ background: linear-gradient(135deg, #0f141b 0%, #d23948 50%, #db4e5c 100%);
+>>>>>>> ha_sprint1
   display: flex;
   flex-direction: column;
   justify-content: center;

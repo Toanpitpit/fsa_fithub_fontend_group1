@@ -57,8 +57,7 @@ export const API_ENDPOINTS = {
 };
 
 // App Constants
-export const PASSWORD_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+export const PASSWORD_REGEX =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 export const USERNAME_REGEX = /^[a-zA-Z0-9_]+$/;
 export const FULLNAME_REGEX = /^[\p{L}\s]+$/u;
 
