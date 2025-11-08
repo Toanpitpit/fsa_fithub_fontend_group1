@@ -1,6 +1,5 @@
 /* Admin Sidebar Styles */
 .admin-sidebar {
-<<<<<<< HEAD
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
@@ -16,29 +15,11 @@
 
 .admin-sidebar.expanded {
     width: 260px;
-=======
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff;
-  border-right: 1px solid #e5e7eb;
-  height: 99vh;
-  transition: width 0.3s ease;
-  position: relative;
-}
-
-.admin-sidebar.collapsed {
-  width: 70px;
-}
-
-.admin-sidebar.expanded {
-  width: 260px;
->>>>>>> ha_sprint1
 }
 
 
 
 .admin-logo-title {
-<<<<<<< HEAD
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
@@ -78,52 +59,10 @@
         0 2px 4px rgba(0, 0, 0, 0.3),
         0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
-=======
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.logo-fit-text {
-  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientShift 3s ease infinite;
-  position: relative;
-  display: inline-block;
-}
-
-.logo-fit-text::after {
-  content: 'Fit';
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: blur(8px);
-  opacity: 0.7;
-  z-index: -1;
-  animation: gradientShift 3s ease infinite;
-}
-
-.logo-hub-text {
-  color: #ffffff;
-  text-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.3),
-    0 4px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
->>>>>>> ha_sprint1
 }
 
 /* Subtle line between Fit and Hub */
 .logo-hub-text::before {
-<<<<<<< HEAD
     content: '';
     position: absolute;
     top: 50%;
@@ -186,74 +125,10 @@
 
 .toggle-btn:hover {
     background-color: #f3f4f6;
-=======
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -8px;
-  width: 2px;
-  height: 60%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-50%);
-}
-/* Header */
-.sidebar-header {
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: bisque;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.brand-icon {
-  width: 28px;
-  height: 28px;
-  background-color: #6366f1;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.brand-icon span {
-  color: white;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.brand-name {
-  color: #1f2937;
-  font-weight: 500;
-  font-size: 16px;
-}
-
-.toggle-btn {
-  background: none;
-  border: none;
-  color: #1f2937;
-  cursor: pointer;
-  padding: 0.375rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-}
-
-.toggle-btn:hover {
-  background-color: #f3f4f6;
->>>>>>> ha_sprint1
 }
 
 /* Search */
 .search-container {
-<<<<<<< HEAD
     padding: 0 1rem;
     margin-bottom: 1rem;
     background-color: #f0e9e9;
@@ -289,48 +164,10 @@
 
 .search-input::placeholder {
     color: #9ca3af;
-=======
-  padding: 0 1rem;
-  margin-bottom: 1rem;
-  background-color: #f0e9e9;
-}
-
-.search-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search-icon {
-  position: absolute;
-  left: 0.75rem;
-  color: #9ca3af;
-  pointer-events: none;
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.5rem 0.75rem 0.5rem 2.5rem;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.search-input:focus {
-  border-color: #6366f1;
-}
-
-.search-input::placeholder {
-  color: #9ca3af;
->>>>>>> ha_sprint1
 }
 
 /* Navigation */
 .sidebar-nav {
-<<<<<<< HEAD
     padding-top: 1rem;
     flex: 1;
     padding: 0 0.5rem;
@@ -385,65 +222,10 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-=======
-  flex: 1;
-  padding: 0 0.5rem;
-  overflow-y: auto;
-  background-color: #d1d5db;
-}
-
-.nav-items {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.nav-link {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: 0.75rem 0.875rem;
-  background: none;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #6b7280;
-  font-size: 16px;
-  position: relative;
-}
-
-.nav-link.active {
-  background-color: #f3f4f6;
-  color: #1f2937;
-}
-
-.nav-link:hover {
-  background-color: #f9fafb;
-  color: #1f2937;
-}
-
-.nav-link.hovered {
-  border-color: #e5e7eb;
-}
-
-.nav-icon {
-  flex-shrink: 0;
-}
-
-.nav-label {
-  font-size: 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
->>>>>>> ha_sprint1
 }
 
 /* Tooltip */
 .tooltip {
-<<<<<<< HEAD
     position: absolute;
     left: 100%;
     margin-left: 0.5rem;
@@ -455,24 +237,10 @@
     white-space: nowrap;
     z-index: 1050;
     pointer-events: none;
-=======
-  position: absolute;
-  left: 100%;
-  margin-left: 0.5rem;
-  background-color: #1f2937;
-  color: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 14px;
-  white-space: nowrap;
-  z-index: 1050;
-  pointer-events: none;
->>>>>>> ha_sprint1
 }
 
 /* Integrations */
 .integrations-section {
-<<<<<<< HEAD
     margin-top: 1.5rem;
 }
 
@@ -514,54 +282,10 @@
 
 .integration-icon.bg-white .icon-svg {
     color: #1f2937;
-=======
-  margin-top: 1.5rem;
-}
-
-.section-title {
-  padding: 0 0.5rem;
-  margin-bottom: 0.5rem;
-  color: #9ca3af;
-  font-size: 16px;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.integration-link .integration-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.integration-icon.bg-white {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-}
-
-.integration-icon.bg-dark {
-  background-color: #1f2937;
-}
-
-.integration-icon.bg-info {
-  background-color: #06b6d4;
-}
-
-.integration-icon .icon-svg {
-  color: white;
-}
-
-.integration-icon.bg-white .icon-svg {
-  color: #1f2937;
->>>>>>> ha_sprint1
 }
 
 /* Footer */
 .sidebar-footer {
-<<<<<<< HEAD
     padding: 1rem;
     border-top: 1px solid #e5e7eb;
 }
@@ -620,71 +344,10 @@
 .logout-btn:hover {
     color: #dc2626;
     background-color: #fef2f2;
-=======
-  padding: 1rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.user-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.user-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.user-name {
-  margin: 0;
-  color: #1f2937;
-  font-size: 16px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.user-email {
-  margin: 0;
-  color: #9ca3af;
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.logout-btn {
-  background: none;
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-
-.logout-btn:hover {
-  color: #dc2626;
-  background-color: #fef2f2;
->>>>>>> ha_sprint1
 }
 
 /* Scrollbar Styling */
 .sidebar-nav::-webkit-scrollbar {
-<<<<<<< HEAD
     width: 6px;
 }
 
@@ -699,36 +362,12 @@
 
 .sidebar-nav::-webkit-scrollbar-thumb:hover {
     background: #d1d5db;
-=======
-  width: 6px;
-}
-
-.sidebar-nav::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar-nav::-webkit-scrollbar-thumb {
-  background: #e5e7eb;
-  border-radius: 3px;
-}
-
-.sidebar-nav::-webkit-scrollbar-thumb:hover {
-  background: #d1d5db;
->>>>>>> ha_sprint1
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-<<<<<<< HEAD
     .admin-sidebar.expanded {
         width: 100%;
         max-width: 260px;
     }
 }
-=======
-  .admin-sidebar.expanded {
-    width: 100%;
-    max-width: 260px;
-  }
-}
->>>>>>> ha_sprint1

@@ -1,23 +1,15 @@
 /* Profile.css */
 .profile-container-parent {
     border-radius: 20px;
-<<<<<<< HEAD
     border: 1px solid #dc2626;
     background-color: #1a1a1a;
-=======
-    border: 1px solid rgb(149, 187, 231);
->>>>>>> ha_sprint1
 }
 .profile-cover-container {
   position: relative;
   height: 320px;
   border-radius: 1rem;
   overflow: hidden;
-<<<<<<< HEAD
   box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.5);
-=======
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
->>>>>>> ha_sprint1
 }
 
 .profile-cover-image {
@@ -63,13 +55,8 @@
   width: 128px;
   height: 128px;
   object-fit: cover;
-<<<<<<< HEAD
   border: 4px solid #1a1a1a;
   box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.5);
-=======
-  border: 4px solid white;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
->>>>>>> ha_sprint1
   transition: transform 0.3s ease;
 }
 
@@ -79,13 +66,8 @@
 }
 
 .profile-camera-btn-avatar {
-<<<<<<< HEAD
   background-color: #2d2d2d;
   color: #ffffff;
-=======
-  background-color: #f3f4f6;
-  color: #070707;
->>>>>>> ha_sprint1
   position: absolute;
   bottom: 8px;
   right: 8px;
@@ -99,19 +81,13 @@
 
 .profile-avatar-container:hover .profile-camera-btn-avatar {
   opacity: 1;
-<<<<<<< HEAD
   background-color: #dc2626;
   color: #ffffff;
-=======
-  background-color: #f6f6f7;
-  color: #070707;
->>>>>>> ha_sprint1
 }
 
 /* Card Styles */
 .profile-card {
   border-radius: 1rem;
-<<<<<<< HEAD
   border: 1px solid #3d3d3d;
   background-color: #1a1a1a;
   box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.5);
@@ -124,57 +100,30 @@
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
   color: #ffffff;
-=======
-  border: none;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.profile-card-header {
-  background-color: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 1.25rem 1.5rem;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
->>>>>>> ha_sprint1
 }
 
 
 .profile-form-control:disabled,
 .profile-form-select:disabled {
-<<<<<<< HEAD
   background-color: #3d3d3d;
   color: #9ca3af;
-=======
-  background-color: #f3f4f6;
-  color: #6b7280;
->>>>>>> ha_sprint1
 }
 
 .profile-form-control,
 .profile-form-select {
   border-radius: 0.5rem;
-<<<<<<< HEAD
   border: 1px solid #4d4d4d;
   padding: 0.625rem 0.875rem;
   background-color: #2d2d2d;
   color: #ffffff;
-=======
-  border: 1px solid #d1d5db;
-  padding: 0.625rem 0.875rem;
->>>>>>> ha_sprint1
 }
 
 .profile-form-control:focus,
 .profile-form-select:focus {
-<<<<<<< HEAD
   border-color: #dc2626;
   box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.3);
   background-color: #2d2d2d;
   color: #ffffff;
-=======
-  border-color: #2563eb;
-  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.1);
->>>>>>> ha_sprint1
 }
 /* Giữ layout và chiều cao đồng đều */
 .profile-radio {
@@ -188,11 +137,7 @@
 
 /* Radio input */
 .profile-radio input[type="radio"] {
-<<<<<<< HEAD
   accent-color: #dc2626;
-=======
-  accent-color: #2563eb;
->>>>>>> ha_sprint1
   cursor: pointer;
   transform: scale(1.1);
 }
@@ -200,63 +145,40 @@
 /* Label text */
 .profile-radio .form-check-label {
   font-weight: 500;
-<<<<<<< HEAD
   color: #e5e5e5;
-=======
-  color: #374151;
->>>>>>> ha_sprint1
 }
 
 /* Hover: chỉ đổi màu chữ và nền nhẹ */
 .profile-radio:hover {
-<<<<<<< HEAD
   background-color: #3d3d3d;
   color: #dc2626;
-=======
-  background-color: #f8fafc;
-  color: #2563eb;
->>>>>>> ha_sprint1
   border-radius: 0.375rem;
 }
 
 /* Khi checked: đổi màu chữ và nền nhẹ */
 .profile-radio input[type="radio"]:checked + label {
-<<<<<<< HEAD
   color: #dc2626;
   background-color: #2d1a1a;
-=======
-  color: #2563eb;
-  background-color: #eff6ff;
->>>>>>> ha_sprint1
   border-radius: 0.375rem;
   padding: 0.25rem 0.375rem;
 }
 
 /* Disabled */
 .profile-radio input[type="radio"]:disabled + label {
-<<<<<<< HEAD
   color: #6b7280;
-=======
-  color: #9ca3af;
->>>>>>> ha_sprint1
   opacity: 0.7;
   cursor: not-allowed;
 }
 
 
 .profile-btn {
-<<<<<<< HEAD
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%) !important;
-=======
-  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #2563eb 100%) !important;
->>>>>>> ha_sprint1
   border: none !important;
   color: white !important;
   padding: 12px 24px !important;
   border-radius: 8px !important;
   font-weight: 600 !important;
   transition: all 0.3s ease !important;
-<<<<<<< HEAD
   box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3) !important;
 }
 
@@ -275,22 +197,6 @@
   background: transparent !important;
   border: 2px solid #dc2626 !important;
   color: #dc2626 !important;
-=======
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2) !important;
-}
-
-.profile-btn:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #0891b2 50%, #1d4ed8 100%) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3) !important;
-}
-
-
-.profile-btn-outline {
-  background: transparent !important;
-  border: 2px solid #3b82f6 !important;
-  color: #3b82f6 !important;
->>>>>>> ha_sprint1
   padding: 10px 22px !important;
   border-radius: 8px !important;
   font-weight: 600 !important;
@@ -298,19 +204,11 @@
 }
 
 .profile-btn-outline:hover {
-<<<<<<< HEAD
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%) !important;
   border-color: transparent !important;
   color: white !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 8px rgba(220, 38, 38, 0.5) !important;
-=======
-  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #2563eb 100%) !important;
-  border-color: transparent !important;
-  color: white !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3) !important;
->>>>>>> ha_sprint1
 }
 
 
@@ -323,7 +221,6 @@
   cursor: pointer !important;
 }
 
-<<<<<<< HEAD
 .profile-btn-cancel {
   background-color: #4d4d4d;
   color: white;
@@ -339,42 +236,28 @@
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 8px rgba(75, 85, 99, 0.3) !important;
 }
-=======
->>>>>>> ha_sprint1
 
 .profile-badge {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-<<<<<<< HEAD
   background-color: #dc2626;
   color: #ffffff;
   border: 1px solid #b91c1c;
-=======
->>>>>>> ha_sprint1
 }
 
 
 .profile-modal-content {
   border-radius: 1rem;
-<<<<<<< HEAD
   border: 1px solid #dc2626;
   background-color: #1a1a1a;
   box-shadow: 0 20px 25px -5px rgba(220, 38, 38, 0.3);
-=======
-  border: none;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
->>>>>>> ha_sprint1
 }
 
 
 .profile-camera-btn-cover,
 .profile-camera-btn-avatar {
-<<<<<<< HEAD
   background: rgba(45, 45, 45, 0.9);
   color: #ffffff;
-=======
-  background: rgba(255, 255, 255, 0.9);
->>>>>>> ha_sprint1
   border: none;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
@@ -382,31 +265,18 @@
 
 .profile-camera-btn-cover:hover,
 .profile-camera-btn-avatar:hover {
-<<<<<<< HEAD
   background: rgba(220, 38, 38, 1);
   color: #ffffff;
-=======
-  background: rgba(255, 255, 255, 1);
->>>>>>> ha_sprint1
   transform: scale(1.1);
 }
 
 .profile-camera-btn-avatar {
-<<<<<<< HEAD
   background: rgba(45, 45, 45, 1);
   color: rgb(255, 255, 255);
 }
 
 .profile-camera-btn-avatar:hover {
   background: rgba(220, 38, 38, 1);
-=======
-  background: rgba(240, 240, 240, 1);
-  color: rgb(5, 5, 5);
-}
-
-.profile-camera-btn-avatar:hover {
-  background: rgba(37, 99, 235, 1);
->>>>>>> ha_sprint1
 }
 
 /* File input styling */
@@ -460,8 +330,4 @@
   .profile-avatar-wrapper {
     bottom: -40px;
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> ha_sprint1
