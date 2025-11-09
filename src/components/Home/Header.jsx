@@ -32,7 +32,7 @@ export default function Header({ user }) {
 
   return (
     <Navbar expand="lg" className="py-3">
-      <Container>
+      <Container fluid className="header-container px-5">
         {/* Logo */}
         <Navbar.Brand
           href="/home-page"
@@ -48,37 +48,53 @@ export default function Header({ user }) {
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   fontWeight: 700,
+                  fontSize: 28,
                 }}
               >
                 Fit
               </span>
-              <span style={{ color: "#e9cbccff", fontWeight: 700 }}>Hub</span>
+              <span
+                style={{
+                  color: "#e9cbccff",
+                  fontWeight: 700,
+                  fontSize: 28,
+                }}
+              >
+                Hub
+              </span>
             </div>
-            <div className="brand-tagline">Transform Your Body</div>
+            <div
+              className="brand-tagline"
+              style={{
+                fontSize: 16,
+              }}
+            >
+              Transform Your Body
+            </div>
           </div>
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           {/* Menu */}
-          <Nav className="mx-auto">
-            <Nav.Link href="/home-page" className="active">
-              Home
-            </Nav.Link>
+          <Nav className="mx-auto gap-4">
+            <Nav.Link href="/home-page">Home</Nav.Link>
             <Nav.Link
               href="#programs"
-              className="d-flex align-items-center gap-1"
+              className="d-flex align-items-center gap-3"
             >
               Programs <ChevronDown size={14} color="#d90a14" />
             </Nav.Link>
             <Nav.Link
               href="#coaching"
-              className="d-flex align-items-center gap-1"
+              className="d-flex align-items-center gap-3"
             >
               Coaching <ChevronDown size={14} color="#d90a14" />
             </Nav.Link>
             <Nav.Link href="#membership">Membership</Nav.Link>
-            <Nav.Link href="#about">About Us</Nav.Link>
+            <Nav.Link href="#about" className="d-flex align-items-center text-nowrap gap-3">
+              About Us
+            </Nav.Link>
           </Nav>
 
           {/* Right side */}

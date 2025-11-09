@@ -59,6 +59,7 @@ body {
 
 .nav-link.active {
   border-bottom: 2px solid var(--primary-red);
+  background-color: #888888 !important;
 }
 
 .nav-link {
@@ -618,26 +619,26 @@ body {
 /* Head */
 /* ===== User Dropdown Toggle ===== */
 .user-toggle {
-  gap: 10px;
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 999px;
-  position: relative;
-  transition: background-color 180ms ease, box-shadow 180ms ease, transform 120ms ease;
+  gap: 10px !important;
+  color: #fff !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  position: relative !important;
+  transition: background-color 180ms ease, box-shadow 180ms ease, transform 120ms ease !important;
 }
 
 .user-toggle:focus-visible {
-  outline: 2px solid #db4e5c;       /* focus ring rõ */
-  outline-offset: 2px;
+  outline: 2px solid #db4e5c !important;  /* focus ring rõ */
+  outline-offset: 2px !important;
 }
 
 .user-toggle:hover {
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16);
+  background: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16) !important;
 }
 
 .user-toggle:active {
-  transform: translateY(1px);
+  transform: translateY(1px) !important;
 }
 
 /* Avatar tròn, viền subtle thay vì đỏ chót */

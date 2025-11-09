@@ -47,14 +47,7 @@ export function clearTokens() {
   sessionStorage.removeItem("refresh_expiry");
 }
 
-// export function isAccessTokenExpired() {
-//   const now = Date.now();
-//   const accessExpiry =
-//     Number(sessionStorage.getItem("access_expiry")) ||
-//     Number(localStorage.getItem("access_expiry"));
 
-//   return !accessExpiry ? true : now > accessExpiry ? true : false;
-// }
 
 export function isAccessTokenExpired() {
   const rememberMe = localStorage.getItem("remember_me") === "true";
@@ -77,8 +70,10 @@ export function isRefreshTokenExpired() {
   const token = storage.getItem("refresh_token");
   const expiry = Number(storage.getItem("refresh_expiry"));
 
+  //  console.log(token + "         ex         "  + expiry);
+  //  console.log(Date.now() - expiry) ;
+   
   if (!token || !expiry) return true;
 
   return Date.now() > expiry;
 }
-

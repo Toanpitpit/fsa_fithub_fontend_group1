@@ -16,20 +16,10 @@ import useProfile from "../hooks/userprofile";
 import { avatar_url_default, cover_url_default } from "../constants/constant";
 import { authService } from "../services/authService";
 
-function ProfileComplete() {
+function ProfileComplete(user) {
   const { id } = useParams();
-  const [user, setUser] = useState();
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await authService.getUserFromRefresh();
-        if (res.success) setUser(res.data);
-      } catch (err) {
-        console.error(err.message);
-      }
-    };
-    fetchUser();
-  }, []);
+
+  
   const {
     profile,
     handleAvatarSelect,

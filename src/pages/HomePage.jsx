@@ -95,8 +95,11 @@ export default function Hompage() {
   useEffect(() => {
     const fetchUserFromRefresh = async () => {
       const refreshToken = getRefreshToken();
+    //  console.log(isRefreshTokenExpired());
+    //  console.log(refreshToken);
      
-      // if (!refreshToken || isRefreshTokenExpired()) return;
+     
+      if (!refreshToken || isRefreshTokenExpired()) return;
 
       try {
         const userResponse = await axios.post(
@@ -105,7 +108,7 @@ export default function Hompage() {
             refresh_token: refreshToken,
           }
         );
-        setUserObject(userResponse.data.data);
+        setUserObject(userResponse.data?.data);
       } catch (error) {
         console.error("Failed to fetch user:", error);
         if (error.response)

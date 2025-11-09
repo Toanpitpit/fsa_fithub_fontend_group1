@@ -11,7 +11,10 @@ export default function useProfile(userId, currentUser) {
   const [isUpdating, setIsUpdating] = useState(false);
 
   const { uploadFiles, isLoading, error: uploadError, resetError } = useFileUpload();
-
+  console.log("user : ");
+  console.log(currentUser);
+  
+  
   const fetchProfile = async () => {
     if (!userId) return;
     try {
@@ -33,7 +36,7 @@ export default function useProfile(userId, currentUser) {
 
   const isEditable = useMemo(() => {
     if (!currentUser || !profile) return false;
-    return currentUser.id === profile.id;
+    return currentUser.user.id === profile.id;
   }, [currentUser, profile]);
 
 

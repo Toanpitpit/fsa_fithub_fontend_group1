@@ -5,35 +5,23 @@ import Header from "../components/Home/Header";
 import { useEffect, useState } from "react";
 import ProfileComplete from "../components/profile";
 import Footer from "../components/Home/Footer";
-import { getRefreshToken } from "../services/authStorage";
-import axios from "axios";
-import { API_BASE_URL } from "../constants/constant";
 import Toast from "../components/Home/Toast";
+import { authService } from "../services/authService";
 export default function ViewProfile() {
-  const [userObject, setUserObject] = useState();
+ const [user, setUser] = useState();
+   useEffect(() => {
+     const fetchUser = async () => {
+       try {
+         const res = await authService.getUserFromRefresh();
+         if (res.success) setUser(res.data);
+       } catch (err) {
+         console.error(err.message);
+       }
+     };
+     fetchUser();
+   }, []);
  
-  const fetchUserFromRefresh = async () => {
-    const refreshToken = getRefreshToken();
-    // if (!refreshToken || isRefreshTokenExpired()) return;
-    try {
-      const userResponse = await axios.post(
-        `${API_BASE_URL}/auth/me-from-refresh`,
-        {
-          refresh_token: refreshToken,
-        }
-      );
-      setUserObject(userResponse.data.data);
-    } catch (error) {
-      console.error("Failed to fetch user:", error);
-      if (error.response) console.error("Response data:", error.response.data);
-      if (error.request)
-        console.error("Request made but no response:", error.request);
-      console.error("Error message:", error.message);
-    }
-  };
-  useEffect(() => {
-    fetchUserFromRefresh();
-  }, []);
+   
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -59,7 +47,7 @@ export default function ViewProfile() {
       />
 
 
-      <Header user={userObject}></Header>
+      <Header user={user}></Header>
 
       <motion.div
         initial={{ y: 20, opacity: 0 }}
@@ -73,7 +61,7 @@ export default function ViewProfile() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
           >
-            <ProfileComplete />
+            <ProfileComplete user={user} />
           </motion.div>
         </Container>
       </motion.div>

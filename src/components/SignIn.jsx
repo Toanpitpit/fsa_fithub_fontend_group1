@@ -60,6 +60,9 @@ export default function SignIn({ onSwitchToSignUp }) {
       const now = Date.now();
       const accessExpiryMs = now + Number(expires_in) * 1000;
       const refreshExpiryMs = now + Number(refresh_expires_in) * 1000;
+      console.log("accessExpiryMs") + accessExpiryMs;
+      console.log("refreshExpiryMs" + refreshExpiryMs);
+      console.log(now - refreshExpiryMs);
 
       // Chọn storage theo rememberMe
       const storage = rememberMe ? localStorage : sessionStorage;
