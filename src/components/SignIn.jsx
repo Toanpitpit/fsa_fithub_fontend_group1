@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import {
   FaArrowRight,
@@ -10,8 +10,8 @@ import {
 } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import "../style/SignIn.css";
-import { useNavigate } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
+import Toast from "./Home/Toast";
 
 export default function SignIn({ onSwitchToSignUp }) {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -25,9 +25,11 @@ export default function SignIn({ onSwitchToSignUp }) {
   const [shake, setShake] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [toastMsg, setToastMsg] = useState("");
 
   const clickSignIn = async () => {
-
     try {
       const loginRequest = {
         emailOrUsername: emailOrUsername,
@@ -40,21 +42,49 @@ export default function SignIn({ onSwitchToSignUp }) {
         loginRequest
       );
 
-      const tokens = loginResponse.data?.data?.tokens;
-
-      console.log(rememberMe);
-      if (rememberMe) {
-        // Lưu lâu dài (xóa browser không mất token)
-        localStorage.setItem("access_token", tokens.access_token); // default 1h
-        localStorage.setItem("refresh_token", tokens.refresh_token); // default 30 ngày
-      } else {
-        // Lưu tạm trong session (xóa browser mất token)
-        sessionStorage.setItem("access_token", tokens.access_token); //  default 1h
-        sessionStorage.setItem("refresh_token", tokens.refresh_token); // default 1 ngày
+      // Lấy token & thời gian hết hạn
+      const tokens = loginResponse?.data?.data?.tokens;
+      if (!tokens) {
+        // handle error sớm
+        throw new Error("Tokens not found in response");
       }
 
+      const {
+        access_token,
+        refresh_token,
+        expires_in, // seconds, ví dụ 3600
+        refresh_expires_in, // seconds, ví dụ 30*24*3600
+      } = tokens;
 
-      navigate("/home", { state: { successMessage: loginResponse.data?.message + " 🎉" } });
+      // Tính mốc hết hạn (ms)
+      const now = Date.now();
+      const accessExpiryMs = now + Number(expires_in) * 1000;
+      const refreshExpiryMs = now + Number(refresh_expires_in) * 1000;
+      console.log("accessExpiryMs") + accessExpiryMs;
+      console.log("refreshExpiryMs" + refreshExpiryMs);
+      console.log(now - refreshExpiryMs);
+
+      // Chọn storage theo rememberMe
+      const storage = rememberMe ? localStorage : sessionStorage;
+      const other = rememberMe ? sessionStorage : localStorage;
+
+      // xóa bên còn lại để tránh “đụng hàng”
+      other.removeItem("access_token");
+      other.removeItem("refresh_token");
+      other.removeItem("access_expiry");
+      other.removeItem("refresh_expiry");
+      localStorage.removeItem("remember_me");
+
+      // Lưu đồng bộ token + expiry
+      storage.setItem("access_token", access_token);
+      storage.setItem("refresh_token", refresh_token);
+      storage.setItem("access_expiry", String(accessExpiryMs));
+      storage.setItem("refresh_expiry", String(refreshExpiryMs));
+      localStorage.setItem("remember_me", rememberMe ? "true" : "false");
+
+      navigate("/home-page", {
+        state: { successMessage: loginResponse.data?.message + " 🎉" },
+      });
     } catch (error) {
       const errMsg = error.response?.data?.message || error.message;
 
@@ -71,8 +101,28 @@ export default function SignIn({ onSwitchToSignUp }) {
     setShowPassword(!showPassword);
   };
 
+  useEffect(() => {
+    if (location.state?.errorMessage) {
+      setToastMsg(location.state.errorMessage);
+
+      // Clear state sau khi Toast đã hiển thị xong
+      setTimeout(() => {
+        navigate(location.pathname, { replace: true });
+      }, 100); // duration toast
+    }
+  }, [location.state, navigate, location.pathname]);
+
   return (
     <div className="auth-container">
+      <div className="toast-wrapper">
+        {toastMsg && (
+          <Toast
+            message={toastMsg}
+            onClose={() => setToastMsg("")}
+            duration={4000}
+          />
+        )}
+      </div>
       <div className="auth-card">
         <div className="row g-0 min-h-500">
           <div className="col-md-6 auth-form-side">
@@ -149,17 +199,6 @@ export default function SignIn({ onSwitchToSignUp }) {
                   <FcGoogle className="google-icon" />
                   <span>Continue with Google</span>
                 </button>
-
-                <div className="text-center mt-3">
-                  <span className="switch-text">Don't have an account? </span>
-                  <button
-                    type="button"
-                    onClick={onSwitchToSignUp}
-                    className="switch-link"
-                  >
-                    Create Account
-                  </button>
-                </div>
 
                 <div className="text-center mt-4">
                   <p className="terms-text">

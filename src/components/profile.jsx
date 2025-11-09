@@ -1,109 +1,120 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Container,
   Card,
   Form,
   Button,
   Modal,
-  Badge,
   Image,
   Row,
   Col,
 } from "react-bootstrap";
 import "../style/Profile.css";
 import { Camera } from "lucide-react";
+import { useParams } from "react-router-dom";
+import useProfile from "../hooks/userprofile";
+import { avatar_url_default, cover_url_default } from "../constants/constant";
+import { authService } from "../services/authService";
 
-function ProfileComplete() {
+function ProfileComplete(user) {
+  const { id } = useParams();
+
+  
+  const {
+    profile,
+    handleAvatarSelect,
+    handleCoverSelect,
+    updateProfile,
+    reloadProfile,
+    isLoading,
+    isEditable,
+  } = useProfile(id, user);
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-
   const coverFileInputRef = useRef(null);
   const avatarFileInputRef = useRef(null);
+  const [toastMsg, setToastMsg] = useState("");
 
   const [profileInfo, setProfileInfo] = useState({
-    username: "johndoe",
-    fullName: "John Doe",
-    email: "john.doe@example.com",
-    dateOfBirth: "1990-05-15",
-    gender: "male",
-    bio: "Passionate developer and tech enthusiast. Love to build amazing web applications and share knowledge with the community.",
-    avatar_url:
-      "https://images.unsplash.com/photo-1570170609489-43197f518df0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBwZXJzb24lMjBwb3J0cmFpdHxlbnwxfHx8fDE3NjIzMTE5MzB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    cover_url:
-      "https://images.unsplash.com/photo-1689094195667-3dae89dd11fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuYXR1cmUlMjBsYW5kc2NhcGUlMjBiYW5uZXJ8ZW58MXx8fHwxNzYyMjY2MDA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
-    lastLogin: "November 5, 2025 at 2:30 PM",
+    username: "",
+    fullName: "",
+    email: "",
+    dateOfBirth: "",
+    gender: "",
+    bio: "",
+    avatarUrl: "",
+    coverUrl: "",
+    lastLoginAt: "",
   });
 
-  const handleToggleEdit = () => {
-    setIsEditMode(!isEditMode);
-  };
+  useEffect(() => {
+    if (profile)
+      setProfileInfo({
+        username: profile.username || "",
+        fullName: profile.fullName || "",
+        email: profile.email || "",
+        dateOfBirth: profile.dateOfBirth || "",
+        gender: profile.gender || "",
+        bio: profile.bio || "",
+        avatarUrl: profile.avatarUrl || "",
+        coverUrl: profile.coverUrl || "",
+        lastLoginAt: profile.lastLoginAt || "",
+      });
+  }, [profile]);
 
-  const handleUpdateProfile = () => {
-    if (profileInfo.fullName.trim === "") {
-      setIsEditMode(!isEditMode);
-      return;
-    }
-    setIsEditMode(!isEditMode);
-  };
+  const handleToggleEdit = () => setIsEditMode(!isEditMode);
 
   const handleProfileInfoChange = (field, value) => {
-    setProfileInfo((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-  /*
-    
-  */
-  const handleCoverChange = () => {
-    coverFileInputRef.current?.click();
+    setProfileInfo((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleAvatarChange = () => {
-    avatarFileInputRef.current?.click();
-  };
+  const handleUpdateProfile = async () => {
+    if (!profileInfo.fullName.trim()) {
+      alert("Full name cannot be empty");
+      return;
+    }
 
-  /*
-   */
-  const handleCoverFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (!file.type.startsWith("image/")) {
-        alert("Please select an image file");
-        return;
-      }
+    const updatedData = {
+      fullName: profileInfo.fullName,
+      gender: profileInfo.gender,
+      dateOfBirth: profileInfo.dateOfBirth,
+      bio: profileInfo.bio,
+    };
 
-      if (file.size > 5 * 1024 * 1024) {
-        alert("File size should be less than 5MB");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        handleProfileInfoChange("cover_url", e.target.result);
-      };
-      reader.readAsDataURL(file);
+    const res = await updateProfile(updatedData);
+    if (res.success) {
+      setToastMsg(res.data?.message);
+      await reloadProfile();
+      setIsEditMode(false);
+    } else {
+      alert(res.error || "Cập nhật thất bại!");
+      await reloadProfile();
     }
   };
 
-  const handleAvatarFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (!file.type.startsWith("image/")) {
-        alert("Please select an image file");
-        return;
-      }
+  const handleCoverChange = () => coverFileInputRef.current?.click();
+  const handleAvatarChange = () => avatarFileInputRef.current?.click();
 
-      if (file.size > 2 * 1024 * 1024) {
-        alert("File size should be less than 2MB");
-        return;
-      }
+  const handleCoverFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      handleCoverSelect([file]);
+      setProfileInfo((prev) => ({
+        ...prev,
+        coverUrl: URL.createObjectURL(file),
+      }));
+    }
+  };
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        handleProfileInfoChange("avatar_url", e.target.result);
-      };
-      reader.readAsDataURL(file);
+  const handleAvatarFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      handleAvatarSelect([file]);
+      setProfileInfo((prev) => ({
+        ...prev,
+        avatarUrl: URL.createObjectURL(file),
+      }));
     }
   };
 
@@ -112,34 +123,23 @@ function ProfileComplete() {
     newPassword: "",
     confirmPassword: "",
   });
-
   const [passwordErrors, setPasswordErrors] = useState({});
 
-  const handlePasswordChange = (field, value) => {
-    setPasswordData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  const handlePasswordChange = (field, value) =>
+    setPasswordData((prev) => ({ ...prev, [field]: value }));
 
   const validatePassword = () => {
     const errors = {};
-
-    if (!passwordData.currentPassword) {
+    if (!passwordData.currentPassword)
       errors.currentPassword = "Current password is required";
-    }
-
-    if (!passwordData.newPassword) {
+    if (!passwordData.newPassword)
       errors.newPassword = "New password is required";
-    } else if (passwordData.newPassword.length < 8) {
+    else if (passwordData.newPassword.length < 8)
       errors.newPassword = "Password must be at least 8 characters";
-    }
-
-    if (!passwordData.confirmPassword) {
+    if (!passwordData.confirmPassword)
       errors.confirmPassword = "Please confirm your password";
-    } else if (passwordData.newPassword !== passwordData.confirmPassword) {
+    else if (passwordData.newPassword !== passwordData.confirmPassword)
       errors.confirmPassword = "Passwords do not match";
-    }
 
     setPasswordErrors(errors);
     return Object.keys(errors).length === 0;
@@ -147,7 +147,6 @@ function ProfileComplete() {
 
   const handleSubmitPassword = (e) => {
     e.preventDefault();
-
     if (validatePassword()) {
       alert("Password changed successfully!");
       setShowPasswordModal(false);
@@ -170,9 +169,11 @@ function ProfileComplete() {
     setPasswordErrors({});
   };
 
+  if (!profile) return <p>Loading...</p>;
+
   return (
     <div
-      className="bg-light min-vh-100 profile-container-parent"
+      className="bg-dark min-vh-100 profile-container-parent"
       style={{ maxWidth: "1200px" }}
     >
       <input
@@ -190,6 +191,16 @@ function ProfileComplete() {
         style={{ display: "none" }}
       />
 
+      <div className="toast-wrapper">
+        {toastMsg && (
+          <Toast
+            message={toastMsg}
+            onClose={() => setToastMsg("")}
+            duration={4000}
+          />
+        )}
+      </div>
+
       <Container
         fluid
         style={{ maxWidth: "1200px" }}
@@ -198,27 +209,25 @@ function ProfileComplete() {
         <div className="position-relative">
           <div className="profile-cover-container">
             <img
-              src={profileInfo.cover_url}
+              src={profileInfo.coverUrl || cover_url_default}
               alt="Cover"
               className="profile-cover-image"
             />
             {isEditMode && (
-              <>
-                <button
-                  onClick={handleCoverChange}
-                  className="btn btn-light profile-camera-btn-cover d-flex align-items-center justify-content-center"
-                  title="Change cover photo"
-                >
-                  <Camera size={20} className="fs-5" />
-                </button>
-              </>
+              <button
+                onClick={handleCoverChange}
+                className="btn btn-light profile-camera-btn-cover d-flex align-items-center justify-content-center"
+                title="Change cover photo"
+              >
+                <Camera size={20} className="fs-5" />
+              </button>
             )}
           </div>
 
           <div className="profile-avatar-wrapper">
             <div className="profile-avatar-container">
               <Image
-                src={profileInfo.avatar_url}
+                src={profileInfo.avatarUrl || avatar_url_default}
                 alt={profileInfo.fullName}
                 roundedCircle
                 className="profile-avatar-image"
@@ -238,53 +247,89 @@ function ProfileComplete() {
 
         <div style={{ marginTop: "5rem" }}>
           <div className="text-center mb-4">
-            <h1 className="h2 mb-2 fw-semibold">{profileInfo.fullName}</h1>
-            <p className="text-muted mb-0">@{profileInfo.username}</p>
+            <h1 className="h2 mb-2 text-light fw-semibold">
+              {profileInfo.fullName}
+            </h1>
+            <p className="text-light mb-1">@{profileInfo.username}</p>
           </div>
 
           <Card className="profile-card">
             <Card.Header className="profile-card-header">
               <div className="d-flex justify-content-between align-items-md-center gap-3">
-                <h5 className="mb-2">Profile Information</h5>
-                <div className="d-flex flex-column flex-sm-row justify-content-end gap-2 w-100 w-md-auto">
-                  <button
-                    className="d-flex align-items-center justify-content-center gap-2 profile-btn-outline"
-                    onClick={() => setShowPasswordModal(true)}
-                  >
-                    <i className="bi bi-key"></i>
-                    <span>Change Password</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      isEditMode ? handleToggleEdit() : handleUpdateProfile();
-                    }}
-                    className={`d-flex align-items-center justify-content-center gap-2 ${
-                      isEditMode ? "profile-btn" : "profile-btn-outline"
-                    }`}
-                  >
-                    <i
-                      className={isEditMode ? "bi bi-check-lg" : "bi bi-pencil"}
-                    ></i>
-                    <span>{isEditMode ? "Save Profile" : "Edit Profile"}</span>
-                  </button>
-                </div>
+                <h5 className="mb-2 text-light">Profile Information</h5>
+                {isEditable && (
+                  <div className="d-flex flex-column flex-sm-row justify-content-end gap-2 w-100 w-md-auto">
+                    <button
+                      className="d-flex align-items-center justify-content-center gap-2 profile-btn-outline"
+                      onClick={() => setShowPasswordModal(true)}
+                    >
+                      <i className="bi bi-key"></i>
+                      <span>Change Password</span>
+                    </button>
+
+                    {!isEditMode ? (
+                      <button
+                        onClick={handleToggleEdit}
+                        className="d-flex align-items-center justify-content-center gap-2 profile-btn-outline"
+                      >
+                        <i className="bi bi-pencil"></i>
+                        <span>Edit Profile</span>
+                      </button>
+                    ) : (
+                      <div className="d-flex gap-2">
+                        <button
+                          onClick={handleUpdateProfile}
+                          className="d-flex align-items-center justify-content-center gap-2 profile-btn"
+                          disabled={isLoading}
+                        >
+                          {isLoading ? (
+                            <>
+                              <span
+                                className="spinner-border spinner-border-sm text-light"
+                                role="status"
+                              ></span>
+                              <span>Saving...</span>
+                            </>
+                          ) : (
+                            <>
+                              <i className="bi bi-check-lg"></i>
+                              <span>Save</span>
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          onClick={handleToggleEdit}
+                          className="d-flex align-items-center justify-content-center gap-2 profile-btn-cancel"
+                        >
+                          <i className="bi bi-x-lg"></i>
+                          <span>Cancel</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </Card.Header>
 
             <Card.Body className="p-4">
               <Form>
                 <Form.Group className="mb-4">
-                  <Form.Label>Username</Form.Label>
+                  <Form.Label className="profile-tag-title fw-semibold text-light">
+                    Username
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     value={profileInfo.username}
                     disabled
-                    className="profile-form-control"
+                    className="profile-form-control text-light"
                   />
                 </Form.Group>
 
                 <Form.Group className="mb-4">
-                  <Form.Label>Full Name</Form.Label>
+                  <Form.Label className="profile-tag-title fw-semibold text-light">
+                    Full Name
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     value={profileInfo.fullName}
@@ -292,26 +337,26 @@ function ProfileComplete() {
                       handleProfileInfoChange("fullName", e.target.value)
                     }
                     disabled={!isEditMode}
-                    className="profile-form-control"
+                    className="profile-form-control text-light"
                   />
                 </Form.Group>
 
-                {/* Email */}
                 <Form.Group className="mb-4">
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label className="profile-tag-title fw-semibold text-light">
+                    Email
+                  </Form.Label>
                   <Form.Control
                     type="email"
                     value={profileInfo.email}
                     disabled
-                    placeholder="your.email@example.com"
-                    className="profile-form-control"
+                    className="profile-form-control text-light"
                   />
                 </Form.Group>
 
                 <Row className="g-3">
                   <Col md={6}>
                     <Form.Group className="mb-4">
-                      <Form.Label className="fw-semibold">
+                      <Form.Label className="profile-tag-title fw-semibold text-light">
                         <i className="bi bi-calendar3 me-2"></i>
                         Date of Birth
                       </Form.Label>
@@ -322,14 +367,14 @@ function ProfileComplete() {
                           handleProfileInfoChange("dateOfBirth", e.target.value)
                         }
                         disabled={!isEditMode}
-                        className="profile-form-control"
+                        className="profile-form-control text-light"
                       />
                     </Form.Group>
                   </Col>
 
                   <Col md={6}>
                     <Form.Group className="mb-4">
-                      <Form.Label className="fw-semibold">
+                      <Form.Label className="profile-tag-title fw-semibold text-light">
                         <i className="bi bi-gender-ambiguous me-2"></i>
                         Gender
                       </Form.Label>
@@ -342,16 +387,18 @@ function ProfileComplete() {
                         className="profile-form-control"
                       >
                         <option value="">Select gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
                       </Form.Select>
                     </Form.Group>
                   </Col>
                 </Row>
 
                 <Form.Group className="mb-4">
-                  <Form.Label>Bio</Form.Label>
+                  <Form.Label className="profile-tag-title fw-semibold text-light">
+                    Bio
+                  </Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={4}
@@ -359,20 +406,23 @@ function ProfileComplete() {
                     onChange={(e) =>
                       handleProfileInfoChange("bio", e.target.value)
                     }
+                    placeholder="Tell they something about you!!"
                     disabled={!isEditMode}
-                    placeholder="Tell us about yourself..."
-                    className="profile-form-control"
+                    className="profile-form-control text-light"
                   />
                 </Form.Group>
+
                 <Form.Group className="mb-0">
-                  <Form.Label>Last Login</Form.Label>
+                  <Form.Label className="profile-tag-title fw-semibold text-light">
+                    Last Login
+                  </Form.Label>
                   <Form.Control
                     type="text"
-                    value={profileInfo.lastLogin}
+                    value={profileInfo.lastLoginAt}
                     disabled
-                    className="profile-form-control text-muted"
+                    className="profile-form-control text-light"
                   />
-                  <Form.Text className="text-muted">
+                  <Form.Text className="text-muted text-lingt">
                     This field is read-only and automatically updated.
                   </Form.Text>
                 </Form.Group>
@@ -382,7 +432,6 @@ function ProfileComplete() {
         </div>
       </Container>
 
-      {/* Change Password Modal */}
       <Modal
         show={showPasswordModal}
         onHide={handleClosePasswordModal}
@@ -390,8 +439,7 @@ function ProfileComplete() {
       >
         <Modal.Header closeButton>
           <Modal.Title className="d-flex align-items-center">
-            <i className="bi bi-key me-2"></i>
-            Change Password
+            <i className="bi bi-key me-2"></i> Change Password
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -399,7 +447,6 @@ function ProfileComplete() {
             Update your password to keep your account secure.
           </p>
           <Form onSubmit={handleSubmitPassword}>
-            {/* Current Password */}
             <Form.Group className="mb-3">
               <Form.Label>Current Password</Form.Label>
               <Form.Control
@@ -417,7 +464,6 @@ function ProfileComplete() {
               </Form.Control.Feedback>
             </Form.Group>
 
-            {/* New Password */}
             <Form.Group className="mb-3">
               <Form.Label>New Password</Form.Label>
               <Form.Control
@@ -433,12 +479,8 @@ function ProfileComplete() {
               <Form.Control.Feedback type="invalid">
                 {passwordErrors.newPassword}
               </Form.Control.Feedback>
-              <Form.Text className="text-muted">
-                Password must be at least 8 characters long.
-              </Form.Text>
             </Form.Group>
 
-            {/* Confirm New Password */}
             <Form.Group className="mb-3">
               <Form.Label>Confirm New Password</Form.Label>
               <Form.Control
