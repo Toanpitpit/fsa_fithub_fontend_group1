@@ -28,50 +28,50 @@ export const useSignUp = () => {
 
     // Kiểm tra trống
     if (!username?.trim()) {
-      return 'Vui lòng nhập username.';
+      return 'Please enter username.';
     }
     if (!fullname?.trim()) {
-      return 'Vui lòng nhập họ tên đầy đủ.';
+      return 'Please enter full name.';
     }
     if (!email?.trim()) {
-      return 'Vui lòng nhập email.';
+      return 'Please enter email.';
     }
     if (!dateOfBirth) {
-      return 'Vui lòng chọn ngày sinh.';
+      return 'Please select date of birth.';
     }
     if (!gender) {
-      return 'Vui lòng chọn giới tính.';
+      return 'Please select gender.';
     }
     if (!password) {
-      return 'Vui lòng nhập mật khẩu.';
+      return 'Please enter password.';
     }
     if (!confirmPassword) {
-      return 'Vui lòng xác nhận mật khẩu.';
+      return 'Please confirm password.';
     }
 
     // Kiểm tra username
     if (username.length < USERNAME_MIN_LENGTH || username.length > USERNAME_MAX_LENGTH) {
-      return `Username phải từ ${USERNAME_MIN_LENGTH} đến ${USERNAME_MAX_LENGTH} ký tự.`;
+      return `Username must be between ${USERNAME_MIN_LENGTH} and ${USERNAME_MAX_LENGTH} characters.`;
     }
     if (!USERNAME_REGEX.test(username)) {
-      return 'Username chỉ chứa chữ cái, số và dấu gạch dưới.';
+      return 'Username can only contain letters, numbers and underscores.';
     }
 
     // Kiểm tra fullname
     if (fullname.length < 2 || fullname.length > 100) {
-      return 'Họ tên phải từ 2 đến 100 ký tự.';
+      return 'Full name must be between 2 and 100 characters.';
     }
     if (!FULLNAME_REGEX.test(fullname)) {
-      return 'Họ tên chỉ chứa chữ cái và khoảng trắng.';
+      return 'Full name can only contain letters and spaces.';
     }
 
     // Kiểm tra email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return 'Email không hợp lệ.';
+      return 'Email is invalid.';
     }
     if (email.length > 100) {
-      return 'Email không được vượt quá 100 ký tự.';
+      return 'Email cannot exceed 100 characters.';
     }
 
     // Kiểm tra ngày sinh (phải là ngày trong quá khứ)
@@ -79,7 +79,7 @@ export const useSignUp = () => {
     const today = new Date();
     
     if (birthDate >= today) {
-      return 'Ngày sinh phải là ngày trong quá khứ.';
+      return 'Date of birth must be a date in the past.';
     }
 
     // Kiểm tra tuổi tối thiểu
@@ -90,20 +90,20 @@ export const useSignUp = () => {
     const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
     
     if (actualAge < MIN_AGE) {
-      return `Bạn phải từ ${MIN_AGE} tuổi trở lên để đăng ký.`;
+      return `You must be at least ${MIN_AGE} years old to register.`;
     }
 
     // Kiểm tra password match
     if (password !== confirmPassword) {
-      return 'Mật khẩu xác nhận không khớp.';
+      return 'Password confirmation does not match.';
     }
 
     // Kiểm tra độ mạnh password (theo backend requirement)
     if (password.length < PASSWORD_MIN_LENGTH) {
-      return `Mật khẩu phải có ít nhất ${PASSWORD_MIN_LENGTH} ký tự.`;
+      return `Password must be at least ${PASSWORD_MIN_LENGTH} characters.`;
     }
     if (!PASSWORD_REGEX.test(password)) {
-      return 'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (@$!%*?&#).';
+      return 'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character (@$!%*?&#).';
     }
 
     return null;
@@ -121,8 +121,8 @@ export const useSignUp = () => {
 
     // Validate terms agreement
     if (!isAgree) {
-      setError('Bạn cần chấp nhận điều khoản để tiếp tục.');
-      return { success: false, error: 'Bạn cần chấp nhận điều khoản để tiếp tục.' };
+      setError('You need to accept the terms to continue.');
+      return { success: false, error: 'You need to accept the terms to continue.' };
     }
 
     // Validate form data
@@ -152,7 +152,7 @@ export const useSignUp = () => {
 
       // Success
       setSuccessMessage(
-        'Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.'
+        'Registration successful! Please check your email to verify your account.'
       );
 
       console.log('Registration successful:', response);
@@ -160,7 +160,7 @@ export const useSignUp = () => {
       return { success: true, data: response };
     } catch (err) {
       // Handle error
-      const errorMessage = err.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+      const errorMessage = err.message || 'An error occurred. Please try again.';
       setError(errorMessage);
       console.error('Registration error:', err);
       return { success: false, error: errorMessage };

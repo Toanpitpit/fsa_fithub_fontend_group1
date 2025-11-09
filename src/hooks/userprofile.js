@@ -23,10 +23,10 @@ export default function useProfile(userId, currentUser) {
         setProfile(response.data);
         setError(null);
       } else {
-        setError(response.message || "Lỗi không xác định");
+        setError(response.message || "Unknown error");
       }
     } catch (err) {
-      setError(err.message || "Không thể tải hồ sơ");
+      setError(err.message || "Unable to load profile");
     }
   };
 
@@ -42,7 +42,7 @@ export default function useProfile(userId, currentUser) {
 
   const validateFile = (file) => {
     if (!file || !file.type.startsWith("image/")) {
-      setError("Chỉ chấp nhận file ảnh (png, jpg, jpeg)!");
+        setError("Only image files are accepted (png, jpg, jpeg)!");
       return null;
     }
     return file;
@@ -80,7 +80,7 @@ export default function useProfile(userId, currentUser) {
 
   const updateProfile = async (updatedInfo) => {
     if (!isEditable) {
-      setError("Bạn không có quyền chỉnh sửa hồ sơ này");
+      setError("You do not have permission to edit this profile");
       return { success: false };
     }
 
@@ -118,7 +118,7 @@ export default function useProfile(userId, currentUser) {
         setCoverFile(null);
         return { success: true, data: res.data };
       } else {
-        setError(res.message || "Cập nhật thất bại");
+        setError(res.message || "Update failed");
         return { success: false, error: res.message };
       }
     } catch (err) {

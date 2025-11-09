@@ -4,7 +4,6 @@ import {
   Card,
   Form,
   Button,
-  Modal,
   Image,
   Row,
   Col,
@@ -14,7 +13,8 @@ import { Camera } from "lucide-react";
 import { useParams } from "react-router-dom";
 import useProfile from "../hooks/userprofile";
 import { avatar_url_default, cover_url_default } from "../constants/constant";
-import { authService } from "../services/authService";
+import ChangePassword from "./ChangePassword";
+import Toast from "./Home/Toast";
 
 function ProfileComplete(user) {
   const { id } = useParams();
@@ -88,7 +88,7 @@ function ProfileComplete(user) {
       await reloadProfile();
       setIsEditMode(false);
     } else {
-      alert(res.error || "Cập nhật thất bại!");
+      alert(res.error || "Update failed!");
       await reloadProfile();
     }
   };
@@ -118,55 +118,8 @@ function ProfileComplete(user) {
     }
   };
 
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-  const [passwordErrors, setPasswordErrors] = useState({});
-
-  const handlePasswordChange = (field, value) =>
-    setPasswordData((prev) => ({ ...prev, [field]: value }));
-
-  const validatePassword = () => {
-    const errors = {};
-    if (!passwordData.currentPassword)
-      errors.currentPassword = "Current password is required";
-    if (!passwordData.newPassword)
-      errors.newPassword = "New password is required";
-    else if (passwordData.newPassword.length < 8)
-      errors.newPassword = "Password must be at least 8 characters";
-    if (!passwordData.confirmPassword)
-      errors.confirmPassword = "Please confirm your password";
-    else if (passwordData.newPassword !== passwordData.confirmPassword)
-      errors.confirmPassword = "Passwords do not match";
-
-    setPasswordErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleSubmitPassword = (e) => {
-    e.preventDefault();
-    if (validatePassword()) {
-      alert("Password changed successfully!");
-      setShowPasswordModal(false);
-      setPasswordData({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-      setPasswordErrors({});
-    }
-  };
-
-  const handleClosePasswordModal = () => {
-    setShowPasswordModal(false);
-    setPasswordData({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
-    setPasswordErrors({});
+  const handlePasswordChangeSuccess = (message) => {
+    setToastMsg(message || "Password changed successfully!");
   };
 
   if (!profile) return <p>Loading...</p>;
@@ -432,86 +385,11 @@ function ProfileComplete(user) {
         </div>
       </Container>
 
-      <Modal
+      <ChangePassword
         show={showPasswordModal}
-        onHide={handleClosePasswordModal}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title className="d-flex align-items-center">
-            <i className="bi bi-key me-2"></i> Change Password
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p className="text-muted mb-4">
-            Update your password to keep your account secure.
-          </p>
-          <Form onSubmit={handleSubmitPassword}>
-            <Form.Group className="mb-3">
-              <Form.Label>Current Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter current password"
-                value={passwordData.currentPassword}
-                onChange={(e) =>
-                  handlePasswordChange("currentPassword", e.target.value)
-                }
-                isInvalid={!!passwordErrors.currentPassword}
-                className="profile-form-control"
-              />
-              <Form.Control.Feedback type="invalid">
-                {passwordErrors.currentPassword}
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>New Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter new password"
-                value={passwordData.newPassword}
-                onChange={(e) =>
-                  handlePasswordChange("newPassword", e.target.value)
-                }
-                isInvalid={!!passwordErrors.newPassword}
-                className="profile-form-control"
-              />
-              <Form.Control.Feedback type="invalid">
-                {passwordErrors.newPassword}
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Confirm New Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Confirm new password"
-                value={passwordData.confirmPassword}
-                onChange={(e) =>
-                  handlePasswordChange("confirmPassword", e.target.value)
-                }
-                isInvalid={!!passwordErrors.confirmPassword}
-                className="profile-form-control"
-              />
-              <Form.Control.Feedback type="invalid">
-                {passwordErrors.confirmPassword}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClosePasswordModal}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleSubmitPassword}
-            className="profile-btn-primary"
-          >
-            Change Password
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        onHide={() => setShowPasswordModal(false)}
+        onSuccess={handlePasswordChangeSuccess}
+      />
     </div>
   );
 }

@@ -50,6 +50,7 @@ export const API_ENDPOINTS = {
   VERIFY_EMAIL: `${API_BASE_URL}/auth/verify-email`,
   RESEND_VERIFICATION_EMAIL: `${API_BASE_URL}/auth/resend-verification-email`,
   LOGOUT: `${API_BASE_URL}/auth/logout`,
+  CHANGE_PASSWORD: `${API_BASE_URL}/auth/change-password`,
   PROFILE: `${API_BASE_URL}/profile`,
   UPLOAD_MULTIPLE_FILES: `${API_BASE_URL}/upload/multiple`,
   UPLOAD_SINGLE_FILE: `${API_BASE_URL}/upload/single`,

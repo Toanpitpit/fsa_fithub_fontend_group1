@@ -1,28 +1,5 @@
-import axios from 'axios';
-import { API_BASE_URL, API_ENDPOINTS } from '../constants/constant';
-
-// Cấu hình axios instance cho upload file
-const uploadClient = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true, 
-  headers: {
-    'Content-Type': 'multipart/form-data', 
-  },
-});
-
-// Interceptor để tự động thêm token vào header (nếu có)
-uploadClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+import apiClient from './apiClient';
+import { API_ENDPOINTS } from '../constants/constant';
 
 // Upload Service
 export const uploadService = {
@@ -43,9 +20,15 @@ export const uploadService = {
         formData.append('folder', folder);
       }
 
-      const response = await uploadClient.post(
+      const response = await apiClient.post(
         API_ENDPOINTS.UPLOAD_SINGLE_FILE,
-        formData
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        }
       );
 
       // Trả về URL từ response
@@ -55,17 +38,13 @@ export const uploadService = {
 
       throw new Error('URL not found in response');
     } catch (error) {
-      // Handle errors from backend
       if (error.response) {
-        // Server returned error response
         throw new Error(error.response.data.message || 'File upload failed');
       } else if (error.request) {
-        // Request sent but no response received
         throw new Error(
           'Cannot connect to server. Please check your network connection.'
         );
       } else {
-        // Other errors
         throw new Error(error.message || 'An error occurred. Please try again.');
       }
     }
@@ -90,22 +69,24 @@ export const uploadService = {
         formData.append('folder', folder);
       }
 
-      const response = await uploadClient.post(
+      const response = await apiClient.post(
         API_ENDPOINTS.UPLOAD_MULTIPLE_FILES,
-        formData
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        }
       );
 
-      // Trả về mảng URL từ response
       if (response.data && response.data.data) {
-        // Nếu response.data.data là array
         if (Array.isArray(response.data.data)) {
           return response.data.data.map((item) => item.url);
         }
-        // Nếu response.data.data.url là array
         if (Array.isArray(response.data.data.url)) {
           return response.data.data.url;
         }
-        // Nếu response.data.data.url là string duy nhất
         if (response.data.data.url) {
           return [response.data.data.url];
         }
@@ -113,19 +94,15 @@ export const uploadService = {
 
       throw new Error('URL not found in response');
     } catch (error) {
-      // Handle errors from backend
       if (error.response) {
-        // Server returned error response
         throw new Error(
           error.response.data.message || 'Multiple files upload failed'
         );
       } else if (error.request) {
-        // Request sent but no response received
         throw new Error(
           'Cannot connect to server. Please check your network connection.'
         );
       } else {
-        // Other errors
         throw new Error(error.message || 'An error occurred. Please try again.');
       }
     }

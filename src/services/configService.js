@@ -1,26 +1,5 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 import { API_ENDPOINTS } from '../constants/constant';
-
-// Cấu hình axios instance
-const apiClient = axios.create({
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Interceptor để tự động thêm token vào header (nếu có)
-apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 
 // Config Service

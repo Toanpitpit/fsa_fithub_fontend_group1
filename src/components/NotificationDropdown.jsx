@@ -65,11 +65,11 @@ export const NotificationDropdown = () => {
     const date = new Date(timestamp);
     const seconds = Math.floor((now - date) / 1000);
 
-    if (seconds < 60) return 'Vừa xong';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)} phút trước`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)} giờ trước`;
-    if (seconds < 604800) return `${Math.floor(seconds / 86400)} ngày trước`;
-    return date.toLocaleDateString('vi-VN');
+    if (seconds < 60) return 'Just now';
+    if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
+    if (seconds < 604800) return `${Math.floor(seconds / 86400)} days ago`;
+    return date.toLocaleDateString('en-US');
   };
 
   const getNotificationIcon = (type) => {
@@ -95,7 +95,7 @@ export const NotificationDropdown = () => {
       <button 
         className="notification-bell"
         onClick={() => setIsOpen(!isOpen)}
-        title="Thông báo"
+        title="Notifications"
       >
         <span className="bell-icon">🔔</span>
         {unreadCount > 0 && (
@@ -114,13 +114,13 @@ export const NotificationDropdown = () => {
       {isOpen && (
         <div className="notification-panel">
           <div className="notification-header">
-            <h3>Thông báo</h3>
+            <h3>Notifications</h3>
             {unreadCount > 0 && (
               <button 
                 className="mark-all-read-btn"
                 onClick={handleMarkAllAsRead}
               >
-                Đánh dấu tất cả đã đọc
+                Mark all as read
               </button>
             )}
           </div>
@@ -129,8 +129,8 @@ export const NotificationDropdown = () => {
             {notifications.length === 0 ? (
               <div className="empty-notifications">
                 <div className="empty-icon">🔔</div>
-                <p>Không có thông báo nào</p>
-                <small>Bạn sẽ nhận được thông báo khi có hoạt động mới</small>
+                <p>No notifications</p>
+                <small>You will receive notifications when there are new activities</small>
               </div>
             ) : (
               notifications.slice(0, 20).map((notification) => (
@@ -182,7 +182,7 @@ export const NotificationDropdown = () => {
           {notifications.length > 20 && (
             <div className="notification-footer">
               <a href="/notifications" onClick={(e) => e.stopPropagation()}>
-                Xem tất cả {notifications.length} thông báo
+                View all {notifications.length} notifications
               </a>
             </div>
           )}

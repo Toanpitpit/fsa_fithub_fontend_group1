@@ -10,10 +10,7 @@ export const useResendVerification = () => {
   const [status, setStatus] = useState(null); // 'success', 'error', null
   const [message, setMessage] = useState('');
 
-  /**
-   * Gọi API để gửi lại email xác thực
-   * @param {string} email - Email cần gửi lại
-   */
+ 
   const resendEmail = async (email) => {
     setIsLoading(true);
     setStatus(null);
@@ -24,14 +21,14 @@ export const useResendVerification = () => {
       
       if (response.success) {
         setStatus('success');
-        setMessage(response.message || 'Email đã được gửi lại thành công!');
+        setMessage(response.message || 'Verification email has been resent successfully!');
       } else {
         setStatus('error');
-        setMessage(response.message || 'Không thể gửi lại email.');
+        setMessage(response.message || 'Unable to resend email.');
       }
     } catch (error) {
       setStatus('error');
-      setMessage(error.message || 'Đã có lỗi xảy ra khi gửi lại email.');
+      setMessage(error.message || 'An error occurred while resending email.');
     } finally {
       setIsLoading(false);
     }

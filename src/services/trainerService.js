@@ -1,26 +1,5 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 import { API_ENDPOINTS } from '../constants/constant';
-
-// Cấu hình axios instance
-const trainerClient = axios.create({
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Interceptor để tự động thêm token vào header
-trainerClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 // Trainer Service
 export const trainerService = {
@@ -34,7 +13,7 @@ export const trainerService = {
    */
   submitApplication: async (applicationData) => {
     try {
-      const response = await trainerClient.post(
+      const response = await apiClient.post(
         API_ENDPOINTS.TRAINER_APPLICATION,
         applicationData
       );
@@ -83,7 +62,7 @@ export const trainerService = {
    */
   getApplicationStatus: async () => {
     try {
-      const response = await trainerClient.get(
+      const response = await apiClient.get(
         `${API_ENDPOINTS.TRAINER_APPLICATION}/status`
       );
 
