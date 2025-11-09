@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { profileService } from "../services/profileServices";
 import { useFileUpload } from "./useFileUpload";
 
-export default function useProfile(userId) {
+export default function useProfile(userId, currentUser) {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
   const [avatarFile, setAvatarFile] = useState(null);
@@ -31,6 +31,12 @@ export default function useProfile(userId) {
     fetchProfile();
   }, [userId]);
 
+  const isEditable = useMemo(() => {
+    if (!currentUser || !profile) return false;
+    return currentUser.id === profile.id;
+  }, [currentUser, profile]);
+
+
   const validateFile = (file) => {
     if (!file || !file.type.startsWith("image/")) {
       setError("Chỉ chấp nhận file ảnh (png, jpg, jpeg)!");
@@ -40,6 +46,7 @@ export default function useProfile(userId) {
   };
 
   const handleAvatarSelect = (files) => {
+    if (!isEditable) return; // chặn luôn
     const file = validateFile(files[0]);
     if (file) {
       setAvatarFile(file);
@@ -49,6 +56,7 @@ export default function useProfile(userId) {
   };
 
   const handleCoverSelect = (files) => {
+    if (!isEditable) return;
     const file = validateFile(files[0]);
     if (file) {
       setCoverFile(file);
@@ -68,9 +76,13 @@ export default function useProfile(userId) {
   };
 
   const updateProfile = async (updatedInfo) => {
+    if (!isEditable) {
+      setError("Bạn không có quyền chỉnh sửa hồ sơ này");
+      return { success: false };
+    }
+
     setIsUpdating(true);
     resetError();
-
     const payload = { ...updatedInfo };
 
     if (avatarFile) {
@@ -114,25 +126,17 @@ export default function useProfile(userId) {
     }
   };
 
-  const resetProfileUpload = () => {
-    setAvatarFile(null);
-    setCoverFile(null);
-    setUploadedUrls({ avatar: null, cover: null });
-    resetError();
-    setError(null);
-  };
-
   return {
     profile,
     error: error || uploadError,
     isLoading: isLoading || isUpdating,
+    isEditable,
     avatarFile,
     coverFile,
     uploadedUrls,
     handleAvatarSelect,
     handleCoverSelect,
     updateProfile,
-    resetProfileUpload,
     reloadProfile: fetchProfile,
   };
 }

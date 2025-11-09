@@ -23,7 +23,7 @@ export default function Header({ user }) {
   };
 
   const handleProfile = () => {
-    navigate("/profile");
+    navigate(`/profile/${user.id}`);
   };
 
   const avatarSrc =

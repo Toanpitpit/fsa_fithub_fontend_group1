@@ -1,17 +1,19 @@
 import axios from 'axios';
-import { API_ENDPOINTS } from '../constants/constant';
+import { API_BASE_URL, API_ENDPOINTS } from '../constants/constant';
 
 // Cấu hình axios instance cho upload file
 const uploadClient = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true, 
   headers: {
-    'Content-Type': 'multipart/form-data',
+    'Content-Type': 'multipart/form-data', 
   },
 });
 
 // Interceptor để tự động thêm token vào header (nếu có)
 uploadClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

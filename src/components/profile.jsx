@@ -14,23 +14,37 @@ import { Camera } from "lucide-react";
 import { useParams } from "react-router-dom";
 import useProfile from "../hooks/userprofile";
 import { avatar_url_default, cover_url_default } from "../constants/constant";
+import { authService } from "../services/authService";
 
 function ProfileComplete() {
   const { id } = useParams();
+  const [user, setUser] = useState();
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await authService.getUserFromRefresh();
+        if (res.success) setUser(res.data);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+    fetchUser();
+  }, []);
   const {
     profile,
-    error,
     handleAvatarSelect,
     handleCoverSelect,
     updateProfile,
     reloadProfile,
     isLoading,
-  } = useProfile(id);
+    isEditable,
+  } = useProfile(id, user);
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const coverFileInputRef = useRef(null);
   const avatarFileInputRef = useRef(null);
+  const [toastMsg, setToastMsg] = useState("");
 
   const [profileInfo, setProfileInfo] = useState({
     username: "",
@@ -80,7 +94,7 @@ function ProfileComplete() {
 
     const res = await updateProfile(updatedData);
     if (res.success) {
-      alert("Cập nhật hồ sơ thành công!");
+      setToastMsg(res.data?.message);
       await reloadProfile();
       setIsEditMode(false);
     } else {
@@ -187,6 +201,16 @@ function ProfileComplete() {
         style={{ display: "none" }}
       />
 
+      <div className="toast-wrapper">
+        {toastMsg && (
+          <Toast
+            message={toastMsg}
+            onClose={() => setToastMsg("")}
+            duration={4000}
+          />
+        )}
+      </div>
+
       <Container
         fluid
         style={{ maxWidth: "1200px" }}
@@ -243,56 +267,58 @@ function ProfileComplete() {
             <Card.Header className="profile-card-header">
               <div className="d-flex justify-content-between align-items-md-center gap-3">
                 <h5 className="mb-2 text-light">Profile Information</h5>
-                <div className="d-flex flex-column flex-sm-row justify-content-end gap-2 w-100 w-md-auto">
-                  <button
-                    className="d-flex align-items-center justify-content-center gap-2 profile-btn-outline"
-                    onClick={() => setShowPasswordModal(true)}
-                  >
-                    <i className="bi bi-key"></i>
-                    <span>Change Password</span>
-                  </button>
-
-                  {!isEditMode ? (
+                {isEditable && (
+                  <div className="d-flex flex-column flex-sm-row justify-content-end gap-2 w-100 w-md-auto">
                     <button
-                      onClick={handleToggleEdit}
                       className="d-flex align-items-center justify-content-center gap-2 profile-btn-outline"
+                      onClick={() => setShowPasswordModal(true)}
                     >
-                      <i className="bi bi-pencil"></i>
-                      <span>Edit Profile</span>
+                      <i className="bi bi-key"></i>
+                      <span>Change Password</span>
                     </button>
-                  ) : (
-                    <div className="d-flex gap-2">
-                      <button
-                        onClick={handleUpdateProfile}
-                        className="d-flex align-items-center justify-content-center gap-2 profile-btn"
-                        disabled={isLoading}
-                      >
-                        {isLoading ? (
-                          <>
-                            <span
-                              className="spinner-border spinner-border-sm text-light"
-                              role="status"
-                            ></span>
-                            <span>Saving...</span>
-                          </>
-                        ) : (
-                          <>
-                            <i className="bi bi-check-lg"></i>
-                            <span>Save</span>
-                          </>
-                        )}
-                      </button>
 
+                    {!isEditMode ? (
                       <button
                         onClick={handleToggleEdit}
-                        className="d-flex align-items-center justify-content-center gap-2 profile-btn-cancel"
+                        className="d-flex align-items-center justify-content-center gap-2 profile-btn-outline"
                       >
-                        <i className="bi bi-x-lg"></i>
-                        <span>Cancel</span>
+                        <i className="bi bi-pencil"></i>
+                        <span>Edit Profile</span>
                       </button>
-                    </div>
-                  )}
-                </div>
+                    ) : (
+                      <div className="d-flex gap-2">
+                        <button
+                          onClick={handleUpdateProfile}
+                          className="d-flex align-items-center justify-content-center gap-2 profile-btn"
+                          disabled={isLoading}
+                        >
+                          {isLoading ? (
+                            <>
+                              <span
+                                className="spinner-border spinner-border-sm text-light"
+                                role="status"
+                              ></span>
+                              <span>Saving...</span>
+                            </>
+                          ) : (
+                            <>
+                              <i className="bi bi-check-lg"></i>
+                              <span>Save</span>
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          onClick={handleToggleEdit}
+                          className="d-flex align-items-center justify-content-center gap-2 profile-btn-cancel"
+                        >
+                          <i className="bi bi-x-lg"></i>
+                          <span>Cancel</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </Card.Header>
 

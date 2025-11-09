@@ -28,7 +28,7 @@ export default function SwitchRouters() {
           </RedirectIfAuthenticatedLogin>
         }
       />
-      <Route path="/verify-email" element={<VerifyEmail />} />
+
       <Route
         path="/home-page"
         element={
@@ -37,7 +37,7 @@ export default function SwitchRouters() {
           </AuthoGuard>
         }
       />
-      <Route path="*" element={<Navigate to="/auth" replace />} />
+      {/* <Route path="*" element={<Navigate to="/auth" replace />} /> */}
     </Routes>
   );
 }

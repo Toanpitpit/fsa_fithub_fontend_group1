@@ -36,7 +36,7 @@ import imgFrame427 from "../assets/fb1edd6744ee4820dfaccb18734942113c4a3830.png"
 import Toast from "../components/Home/Toast";
 import {
   getRefreshToken,
-  isRefreshTokenExpired
+  isRefreshTokenExpired,
 } from "../services/authStorage";
 
 export default function Hompage() {
@@ -90,12 +90,13 @@ export default function Hompage() {
   const navigate = useNavigate();
 
   const [toastMsg, setToastMsg] = useState("");
-  const [userObject, setUserObject] = useState("");
+  const [userObject, setUserObject] = useState();
 
   useEffect(() => {
     const fetchUserFromRefresh = async () => {
       const refreshToken = getRefreshToken();
-      if (!refreshToken || isRefreshTokenExpired()) return;
+     
+      // if (!refreshToken || isRefreshTokenExpired()) return;
 
       try {
         const userResponse = await axios.post(
@@ -104,9 +105,14 @@ export default function Hompage() {
             refresh_token: refreshToken,
           }
         );
-        setUserObject(userResponse.data);
+        setUserObject(userResponse.data.data);
       } catch (error) {
-        console.error("Failed to fetch user from refresh token:", error);
+        console.error("Failed to fetch user:", error);
+        if (error.response)
+          console.error("Response data:", error.response.data);
+        if (error.request)
+          console.error("Request made but no response:", error.request);
+        console.error("Error message:", error.message);
       }
     };
 
@@ -114,6 +120,7 @@ export default function Hompage() {
       // Nếu vừa login thành công → hiện toast, sau đó reset state
       if (location.state?.successMessage) {
         setToastMsg(location.state.successMessage);
+        
 
         // Clear state tránh toast lặp lại
         navigate(location.pathname, { replace: true });

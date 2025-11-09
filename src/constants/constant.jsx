@@ -54,6 +54,7 @@ export const API_ENDPOINTS = {
   UPLOAD_MULTIPLE_FILES: `${API_BASE_URL}/upload/multiple`,
   UPLOAD_SINGLE_FILE: `${API_BASE_URL}/upload/single`,
   TRAINER_APPLICATION: `${API_BASE_URL}/trainer/application`,
+  ME_FROM_REFRESH:`${API_BASE_URL}/auth/me-from-refresh`
 };
 
 // App Constants
