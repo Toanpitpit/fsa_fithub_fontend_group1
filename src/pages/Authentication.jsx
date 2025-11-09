@@ -1,16 +1,25 @@
 import { motion, AnimatePresence } from "framer-motion";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../style/AuthenticationPage.css"; 
+import { useLocation } from "react-router-dom";
 
 export default function AuthenticationPage() {
+  const location = useLocation();
   const [isSignIn, setIsSignIn] = useState(true);
+
+  // Khi điều hướng từ header, lấy giá trị state
+  useEffect(() => {
+    if (location.state?.isSignIn !== undefined) {
+      setIsSignIn(location.state.isSignIn);
+    }
+  }, [location.state]);
   return (
     <div className="auth-page-container">
       <div className="text-center mb-8">
         <h1 className="auth-logo-title">
-          <span className="logo-fit-text">Fit</span>
+          <span className="logo-fit-text-new">Fit</span>
           <span className="logo-hub-text">Hub</span>
         </h1>
         <p className="auth-tagline">

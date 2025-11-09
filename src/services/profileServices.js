@@ -11,7 +11,7 @@ const apiClient = axios.create({
 // Attach access token before each request
 apiClient.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem("access_token");
+        const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
         if (token) config.headers.Authorization = `Bearer ${token}`;
         return config;
     },
@@ -39,7 +39,7 @@ apiClient.interceptors.response.use(
                     localStorage.setItem("access_token", newAccess);
                     apiClient.defaults.headers.Authorization = `Bearer ${newAccess}`;
                     originalRequest.headers.Authorization = `Bearer ${newAccess}`;
-                    return apiClient(originalRequest); // retry lại request cũ
+                    return apiClient(originalRequest); 
                 }
             } catch (refreshError) {
                 localStorage.clear();

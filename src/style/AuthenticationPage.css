@@ -50,6 +50,17 @@
   display: inline-block;
 }
 
+.logo-fit-text-new {
+  background: linear-gradient(135deg, #0f141b 0%, #d23948 50%, #db4e5c 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease infinite;
+  position: relative;
+  display: inline-block;
+}
+
 /* Glow effect for Fit */
 .logo-fit-text::after {
   content: 'Fit';

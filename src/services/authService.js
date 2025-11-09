@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { API_ENDPOINTS } from '../constants/constant';
-
+import {
+  getRefreshToken,
+  isRefreshTokenExpired,
+} from "../services/authStorage";
 // Cấu hình axios instance
 const apiClient = axios.create({
   headers: {
@@ -9,18 +12,27 @@ const apiClient = axios.create({
 });
 
 // Interceptor để tự động thêm token vào header (nếu có)
-apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      try {
+        const res = await authService.getUserFromRefresh();
+        if (res?.data?.access_token) {
+          localStorage.setItem('access_token', res.data.access_token);
+          error.config.headers.Authorization = `Bearer ${res.data.access_token}`;
+          return apiClient.request(error.config); 
+        }
+      } catch {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '/login';
+      }
     }
-    return config;
-  },
-  (error) => {
     return Promise.reject(error);
   }
 );
+
 
 // Auth Service
 export const authService = {
@@ -109,12 +121,25 @@ export const authService = {
       }
     }
   },
+  getUserFromRefresh: async () => {
+  try {
+    const refreshToken = getRefreshToken();
+    if (!refreshToken) throw new Error('Không có refresh token');
 
-  /**
-   * Đăng xuất
-   */
-  // logout: () => {
-  //   localStorage.removeItem('token');
-  // },
+    const response = await apiClient.post(API_ENDPOINTS.ME_FROM_REFRESH, {
+      refresh_token: refreshToken,
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.message || 'Lấy user thất bại');
+    } else if (error.request) {
+      throw new Error('Không thể kết nối đến server.');
+    } else {
+      throw new Error('Đã có lỗi xảy ra. Vui lòng thử lại.');
+    }
+  }
+},
+
 };
 
